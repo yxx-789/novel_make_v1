@@ -426,8 +426,8 @@ GLOBAL_STYLES = """
 # 页面主题配置 - 不同页面使用不同背景色
 PAGE_THEMES = {
     "首页": {
-        "bg": "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)",  # 淡蓝灰
-        "accent": "#38bdf8",
+        "bg": "linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%)",  # 天蓝色（更明显）
+        "accent": "#0ea5e9",
         "name": "首页"
     },
     "小说创作": {
@@ -451,8 +451,8 @@ PAGE_THEMES = {
         "name": "聊天"
     },
     "系统设置": {
-        "bg": "linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%)",  # 淡灰
-        "accent": "#6b7280",
+        "bg": "linear-gradient(135deg, #f5f5f5 0%, #e5e5e5 100%)",  # 中灰（更明显）
+        "accent": "#737373",
         "name": "设置"
     }
 }
