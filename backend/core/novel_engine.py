@@ -318,15 +318,36 @@ class NovelEngine:
         
         result = await self.llm.generate(prompt)
         # 解析结果并构建 WorldSetting
-        # 这里简化处理，实际需要解析JSON
-        return WorldSetting(
-            era="现代",
-            location="虚构城市",
-            power_system="无",
-            social_structure="现代社会",
-            unique_elements=["AI技术", "虚拟现实"],
-            rules=["物理定律正常"]
-        )
+        import json
+        try:
+            # 清理响应
+            result_clean = result.strip()
+            if result_clean.startswith('```'):
+                result_clean = result_clean.split('```')[1]
+                if result_clean.startswith('json'):
+                    result_clean = result_clean[4:]
+            result_clean = result_clean.strip()
+            
+            world_data = json.loads(result_clean)
+            
+            return WorldSetting(
+                era=world_data.get('era', '现代'),
+                location=world_data.get('location', '虚构城市'),
+                power_system=world_data.get('power_system', '无'),
+                social_structure=world_data.get('social_structure', '现代社会'),
+                unique_elements=world_data.get('unique_elements', []),
+                rules=world_data.get('rules', [])
+            )
+        except Exception as e:
+            print(f"解析世界观失败: {e}")
+            return WorldSetting(
+                era="现代",
+                location="虚构城市",
+                power_system="无",
+                social_structure="现代社会",
+                unique_elements=["AI技术", "虚拟现实"],
+                rules=["物理定律正常"]
+            )
     
     async def _generate_characters(self, project: NovelProject) -> List[CharacterProfile]:
         """生成角色设定"""
@@ -352,14 +373,54 @@ class NovelEngine:
         
         result = await self.llm.generate(prompt)
         # 解析并返回角色列表
-        return [
-            CharacterProfile(
-                name="主角",
-                role="主角",
-                personality=["勇敢", "聪明"],
-                background="普通人"
-            )
-        ]
+        import json
+        try:
+            # 清理响应
+            result_clean = result.strip()
+            if result_clean.startswith('```'):
+                result_clean = result_clean.split('```')[1]
+                if result_clean.startswith('json'):
+                    result_clean = result_clean[4:]
+            result_clean = result_clean.strip()
+            
+            characters_data = json.loads(result_clean)
+            
+            characters = []
+            if isinstance(characters_data, list):
+                for char_data in characters_data:
+                    characters.append(CharacterProfile(
+                        name=char_data.get('name', '角色'),
+                        role=char_data.get('role', '配角'),
+                        personality=char_data.get('personality', []),
+                        background=char_data.get('background', '')
+                    ))
+            elif isinstance(characters_data, dict) and 'characters' in characters_data:
+                for char_data in characters_data['characters']:
+                    characters.append(CharacterProfile(
+                        name=char_data.get('name', '角色'),
+                        role=char_data.get('role', '配角'),
+                        personality=char_data.get('personality', []),
+                        background=char_data.get('background', '')
+                    ))
+            
+            return characters if characters else [
+                CharacterProfile(
+                    name="主角",
+                    role="主角",
+                    personality=["勇敢", "聪明"],
+                    background="普通人"
+                )
+            ]
+        except Exception as e:
+            print(f"解析角色失败: {e}")
+            return [
+                CharacterProfile(
+                    name="主角",
+                    role="主角",
+                    personality=["勇敢", "聪明"],
+                    background="普通人"
+                )
+            ]
     
     async def _generate_plot_blueprint(self, project: NovelProject) -> PlotBlueprint:
         """生成情节蓝图"""
@@ -386,15 +447,42 @@ class NovelEngine:
         
         result = await self.llm.generate(prompt)
         # 解析并返回情节蓝图
-        return PlotBlueprint(
-            main_conflict="正义与邪恶的对抗",
-            inciting_incident="主角获得特殊能力",
-            rising_actions=["初识能力", "遇到导师", "遭遇挫折"],
-            climax="最终决战",
-            falling_actions=["战后的平静"],
-            resolution="新的开始",
-            foreshadowing=[{"hint": "神秘信物", "chapter": 1, "payoff_chapter": 50}]
-        )
+        import json
+        try:
+            # 尝试从AI响应中提取JSON
+            # 移除可能的markdown代码块标记
+            result_clean = result.strip()
+            if result_clean.startswith('```'):
+                result_clean = result_clean.split('```')[1]
+                if result_clean.startswith('json'):
+                    result_clean = result_clean[4:]
+            result_clean = result_clean.strip()
+            
+            # 解析JSON
+            blueprint_data = json.loads(result_clean)
+            
+            return PlotBlueprint(
+                main_conflict=blueprint_data.get('main_conflict', '核心冲突'),
+                inciting_incident=blueprint_data.get('inciting_incident', '触发事件'),
+                rising_actions=blueprint_data.get('rising_actions', []),
+                climax=blueprint_data.get('climax', '高潮'),
+                falling_actions=blueprint_data.get('falling_actions', []),
+                resolution=blueprint_data.get('resolution', '结局'),
+                foreshadowing=blueprint_data.get('foreshadowing', [])
+            )
+        except Exception as e:
+            print(f"解析AI响应失败: {e}")
+            print(f"AI响应内容: {result}")
+            # 如果解析失败，返回基本结构
+            return PlotBlueprint(
+                main_conflict="冲突待定",
+                inciting_incident="触发事件待定",
+                rising_actions=["情节发展"],
+                climax="高潮待定",
+                falling_actions=["结局发展"],
+                resolution="结局待定",
+                foreshadowing=[]
+            )
     
     # ==================== 章节生成 ====================
     
