@@ -14,9 +14,9 @@ GLOBAL_STYLES = """
     :root {
         --bg-primary: #f1f5f9;
         --bg-secondary: #e2e8f0;
-        --text-primary: #334155;
-        --text-secondary: #64748b;
-        --text-tertiary: #94a3b8;
+        --text-primary: #1e293b;
+        --text-secondary: #334155;
+        --text-tertiary: #64748b;
         --accent-color: #38bdf8;
         --glass-bg: rgba(255, 255, 255, 0.6);
         --glass-border: rgba(255, 255, 255, 0.8);
@@ -44,9 +44,9 @@ GLOBAL_STYLES = """
 
     /* ==================== 文本样式 ==================== */
     p, span, div {
-        color: #64748b;  /* 中灰，柔和 */
-        line-height: 1.8;  /* 增加行高，更舒适 */
-        font-weight: 300;  /* 极细字体 */
+        color: #475569;  /* 提高对比度，更深 */
+        line-height: 1.8;
+        font-weight: 400;  /* 常规字重，更清晰 */
     }
 
     /* ==================== 主标题样式 - 极简优雅 ==================== */
@@ -110,10 +110,10 @@ GLOBAL_STYLES = """
     }
 
     .feature-card p {
-        color: #64748b;
+        color: #475569;
         line-height: 1.8;
         margin-bottom: 1rem;
-        font-weight: 300;
+        font-weight: 400;
     }
 
     .feature-card ul {
@@ -123,11 +123,11 @@ GLOBAL_STYLES = """
     }
 
     .feature-card ul li {
-        color: #64748b;
+        color: #475569;
         padding: 0.6rem 0;
         padding-left: 1.5rem;
         position: relative;
-        font-weight: 300;
+        font-weight: 400;
     }
 
     .feature-card ul li::before {
@@ -155,9 +155,9 @@ GLOBAL_STYLES = """
     }
 
     [data-testid="stSidebar"] a {
-        color: #64748b !important;
+        color: #475569 !important;
         transition: all 0.3s ease;
-        font-weight: 300;
+        font-weight: 400;
     }
 
     [data-testid="stSidebar"] a:hover {
@@ -216,7 +216,7 @@ GLOBAL_STYLES = """
     .stTextInput > div > div > input::placeholder,
     .stTextArea > div > div > textarea::placeholder {
         color: #94a3b8;
-        font-weight: 300;
+        font-weight: 400;
     }
 
     /* ==================== 选择框样式 ==================== */
@@ -290,8 +290,8 @@ GLOBAL_STYLES = """
     /* ==================== 复选框和单选框 ==================== */
     .stCheckbox > label,
     .stRadio > label {
-        color: #64748b;
-        font-weight: 300;
+        color: #475569;
+        font-weight: 400;
     }
 
     /* ==================== 数字输入框 ==================== */
@@ -329,8 +329,8 @@ GLOBAL_STYLES = """
     }
 
     .stTabs [data-baseweb="tab"] {
-        color: #64748b;
-        font-weight: 300;
+        color: #475569;
+        font-weight: 400;
         border-radius: 16px;
         padding: 0.5rem 1.5rem;
         transition: all 0.3s ease;
@@ -362,7 +362,7 @@ GLOBAL_STYLES = """
         background: rgba(255, 255, 255, 0.6);
         backdrop-filter: blur(10px);
         border: 2px dashed #cbd5e1;
-        color: #64748b;
+        color: #475569;
         border-radius: 16px;
         transition: all 0.3s ease;
     }
