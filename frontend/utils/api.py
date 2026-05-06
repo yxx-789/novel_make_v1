@@ -2,13 +2,14 @@
 API 调用封装模块 - 完全适配后端 API
 """
 import requests
+import os
 from typing import Dict, List, Optional, Any
 
 
 class Config:
     """配置类"""
-    API_BASE_URL = "http://localhost:8000"
-    DEFAULT_MODEL = "glm-5.1"
+    API_BASE_URL = os.environ.get('API_BASE_URL', 'http://localhost:8000')
+    DEFAULT_MODEL = os.environ.get('LLM_MODEL', 'glm-5.1')
 
 
 class APIClient:

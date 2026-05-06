@@ -1,44 +1,45 @@
 [general]
-# Streamlit配置文件
+# Streamlit配置文件 - 针对Streamlit Cloud优化
 
-# 主题设置
 [theme]
-primaryColor = "#667eea"
-backgroundColor = "#ffffff"
-secondaryBackgroundColor = "#f0f2f6"
-textColor = "#262730"
-font = "sans serif"
+# 主题颜色（可以自定义）
+primaryColor = "#667eea"        # 主色调：蓝色
+backgroundColor = "#ffffff"     # 背景色：白色
+secondaryBackgroundColor = "#f0f2f6"  # 次要背景：浅灰色
+textColor = "#262730"          # 文本颜色：深灰色
+font = "sans serif"            # 字体：无衬线字体
 
-# 服务器配置
 [server]
-port = 8501
-enableCORS = false
-enableXsrfProtection = true
-headless = true
-runOnSave = true
+# 服务器配置（Streamlit Cloud会覆盖这些设置）
+port = 8501                    # 端口（Streamlit Cloud会自动设置）
+enableCORS = true              # 启用CORS，允许前端调用后端API
+enableXsrfProtection = true    # 启用CSRF保护
+headless = true                # 无头模式（适合服务器部署）
+runOnSave = false              # 开发时自动重载，生产环境关闭
 
-# 浏览器设置
 [browser]
-gatherUsageStats = false
-serverAddress = "localhost"
-serverPort = 8501
+# 浏览器配置
+gatherUsageStats = false       # 关闭数据统计
+serverAddress = "auto"         # 服务器地址（Streamlit Cloud自动设置）
+serverPort = 8501              # 服务器端口
 
-# 客户端设置
 [client]
-showErrorDetails = true
-showSidebarNavigation = true
+# 客户端配置
+showErrorDetails = true        # 显示详细错误信息（调试时有用）
+showSidebarNavigation = true   # 显示侧边栏导航
+showWarningOnDirectExecution = false  # 直接执行时不显示警告
 
-# runner设置
 [runner]
-magicEnabled = true
-installTracer = false
-fixMatplotlib = true
+# 执行器配置
+magicEnabled = true            # 启用magic命令
+installTracer = false          # 不安装tracer
+fixMatplotlib = true           # 修复Matplotlib问题
 
-# logger设置
 [logger]
-level = "info"
+# 日志配置
+level = "info"                 # 日志级别：info（生产环境可用）
 
-# deprecation警告
 [deprecation]
-showfileUploaderEncoding = true
-showPyplotGlobalUse = true
+# 弃用警告配置
+showfileUploaderEncoding = true    # 显示文件上传编码警告
+showPyplotGlobalUse = true         # 显示pyplot全局使用警告

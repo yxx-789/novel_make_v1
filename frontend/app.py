@@ -2,7 +2,20 @@
 AI 小说创作平台 - 主入口文件
 """
 import streamlit as st
+import os
 from utils.config import Config
+from utils.api import APIClient
+
+# ==================== 加载环境配置 ====================
+# 从 Streamlit Secrets 或环境变量加载配置
+if 'API_BASE_URL' in st.secrets:
+    Config.API_BASE_URL = st.secrets['API_BASE_URL']
+elif 'API_BASE_URL' in os.environ:
+    Config.API_BASE_URL = os.environ['API_BASE_URL']
+
+# 更新 API 客户端的默认地址
+from utils import api
+api.Config.API_BASE_URL = Config.API_BASE_URL
 
 # ==================== 页面配置 ====================
 st.set_page_config(
