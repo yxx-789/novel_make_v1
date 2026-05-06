@@ -1,0 +1,11 @@
+# Streamlit Cloud 系统依赖
+# 这些包会在部署时自动安装
+
+# 基础工具
+build-essential
+curl
+
+# 可能需要的库（如果用了特定功能）
+# ffmpeg  # 如果处理音频/视频
+# libsm6  # OpenCV依赖
+# libxext6  # OpenCV依赖

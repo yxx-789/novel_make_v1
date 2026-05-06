@@ -1,0 +1,44 @@
+[general]
+# Streamlit配置文件
+
+# 主题设置
+[theme]
+primaryColor = "#667eea"
+backgroundColor = "#ffffff"
+secondaryBackgroundColor = "#f0f2f6"
+textColor = "#262730"
+font = "sans serif"
+
+# 服务器配置
+[server]
+port = 8501
+enableCORS = false
+enableXsrfProtection = true
+headless = true
+runOnSave = true
+
+# 浏览器设置
+[browser]
+gatherUsageStats = false
+serverAddress = "localhost"
+serverPort = 8501
+
+# 客户端设置
+[client]
+showErrorDetails = true
+showSidebarNavigation = true
+
+# runner设置
+[runner]
+magicEnabled = true
+installTracer = false
+fixMatplotlib = true
+
+# logger设置
+[logger]
+level = "info"
+
+# deprecation警告
+[deprecation]
+showfileUploaderEncoding = true
+showPyplotGlobalUse = true
