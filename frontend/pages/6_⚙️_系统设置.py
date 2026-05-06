@@ -21,7 +21,7 @@ with st.form("api_config_form"):
     col1, col2 = st.columns([3, 1])
     
     with col1:
-        current_url = Config.get_api_url()
+        current_url = Config.API_BASE_URL
         new_api_url = st.text_input(
             "🌐 后端 API 地址",
             value=current_url,
