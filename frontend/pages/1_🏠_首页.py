@@ -7,10 +7,15 @@ from utils.config import Config
 from datetime import datetime
 
 st.set_page_config(
+
     page_title="首页 - AI 小说创作平台",
     page_icon="🏠",
     layout="wide"
 )
+
+# 应用全局样式
+from utils.global_styles import apply_global_styles
+apply_global_styles()
 
 st.title("🏠 首页")
 

@@ -7,10 +7,15 @@ from utils.config import Config
 import time
 
 st.set_page_config(
+
     page_title="AI聊天 - AI 小说创作平台",
     page_icon="💬",
     layout="wide"
 )
+
+# 应用全局样式
+from utils.global_styles import apply_global_styles
+apply_global_styles()
 
 st.title("💬 AI 聊天")
 
