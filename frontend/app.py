@@ -36,9 +36,9 @@ st.markdown("""
         font-family: 'Noto Sans SC', sans-serif;
     }
     
-    /* 全局背景 - 米白色书页感 */
+    /* 全局背景 - 夜色深蓝 */
     .stApp {
-        background: linear-gradient(180deg, #faf9f7 0%, #f5f4f2 100%);
+        background: linear-gradient(180deg, #2c3e50 0%, #1c2833 100%);
     }
     
     /* ==================== 主标题样式 ==================== */
@@ -48,7 +48,7 @@ st.markdown("""
         font-weight: 400;
         text-align: center;
         padding: 4rem 0 1.5rem 0;
-        color: #2c2c2c;
+        color: #F4F1EA;
         letter-spacing: 4px;
         position: relative;
     }
@@ -58,7 +58,7 @@ st.markdown("""
         display: block;
         width: 60px;
         height: 2px;
-        background: #c53030;
+        background: #d4af37;
         margin: 1.5rem auto 0;
         opacity: 0.6;
     }
@@ -67,7 +67,7 @@ st.markdown("""
     .sub-header {
         font-family: 'Noto Serif SC', serif;
         font-size: 1.2rem;
-        color: #999;
+        color: #bdc3c7;
         text-align: center;
         margin-bottom: 4rem;
         font-weight: 300;
@@ -75,14 +75,14 @@ st.markdown("""
         font-style: italic;
     }
     
-    /* ==================== 卡片样式 - 书页感 ==================== */
+    /* ==================== 卡片样式 - 夜色质感 ==================== */
     .feature-card {
-        background: #fefdfb;
+        background: #34495e;
         padding: 2.5rem;
         border-radius: 4px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.3);
         margin: 1.5rem 0;
-        border: 1px solid rgba(0,0,0,0.06);
+        border: 1px solid rgba(212, 175, 55, 0.1);
         transition: all 0.4s ease;
         position: relative;
     }
@@ -94,14 +94,15 @@ st.markdown("""
         top: 0;
         bottom: 0;
         width: 3px;
-        background: linear-gradient(180deg, #c53030 0%, #4a5568 100%);
+        background: #d4af37;
         opacity: 0.3;
         transition: opacity 0.3s;
     }
     
     .feature-card:hover {
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.4);
         transform: translateY(-2px);
+        border-color: rgba(212, 175, 55, 0.3);
     }
     
     .feature-card:hover::before {
@@ -110,7 +111,7 @@ st.markdown("""
     
     .feature-card h3 {
         font-family: 'Noto Serif SC', serif;
-        color: #2c2c2c;
+        color: #F4F1EA;
         font-size: 1.4rem;
         font-weight: 600;
         margin-bottom: 1rem;
@@ -118,7 +119,7 @@ st.markdown("""
     }
     
     .feature-card p {
-        color: #666;
+        color: #95a5a6;
         line-height: 1.8;
         margin-bottom: 1.2rem;
         font-weight: 300;
@@ -131,7 +132,7 @@ st.markdown("""
     }
     
     .feature-card ul li {
-        color: #4a5568;
+        color: #7f8c8d;
         padding: 0.6rem 0;
         padding-left: 1.5rem;
         position: relative;
@@ -143,7 +144,7 @@ st.markdown("""
         content: '·';
         position: absolute;
         left: 0;
-        color: #c53030;
+        color: #d4af37;
         font-weight: bold;
         font-size: 1.5rem;
         line-height: 1;
@@ -151,7 +152,7 @@ st.markdown("""
     
     /* ==================== 状态指示器 ==================== */
     .status-online {
-        color: #10b981;
+        color: #4A7C59;
         font-weight: 500;
         display: flex;
         align-items: center;
@@ -165,15 +166,15 @@ st.markdown("""
     }
     
     .status-offline {
-        color: #999;
+        color: #9E3D2D;
         font-weight: 500;
         font-size: 0.9rem;
     }
     
     /* ==================== 按钮样式 ==================== */
     .stButton > button {
-        background: #c53030;
-        color: white;
+        background: #d4af37;
+        color: #1c2833;
         border: none;
         border-radius: 2px;
         padding: 0.7rem 2rem;
@@ -181,18 +182,18 @@ st.markdown("""
         transition: all 0.3s ease;
         font-size: 0.9rem;
         letter-spacing: 1px;
-        box-shadow: 0 1px 3px rgba(197, 48, 48, 0.2);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
     }
     
     .stButton > button:hover {
-        background: #9b2c2c;
-        box-shadow: 0 2px 6px rgba(197, 48, 48, 0.3);
+        background: #E5C974;
+        box-shadow: 0 2px 6px rgba(212, 175, 55, 0.4);
     }
     
     /* ==================== 侧边栏样式 ==================== */
     [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #faf9f7 0%, #f5f4f2 100%);
-        border-right: 1px solid rgba(0,0,0,0.06);
+        background: linear-gradient(180deg, #1c2833 0%, #17202a 100%);
+        border-right: 1px solid rgba(212, 175, 55, 0.1);
     }
     
     [data-testid="stSidebar"] .element-container {
@@ -201,7 +202,7 @@ st.markdown("""
     
     [data-testid="stSidebar"] h1 {
         font-family: 'Noto Serif SC', serif;
-        color: #2c2c2c;
+        color: #F4F1EA;
         font-weight: 600;
         font-size: 1.5rem;
         letter-spacing: 2px;
@@ -221,11 +222,11 @@ st.markdown("""
     /* ==================== 标题样式 ==================== */
     h2 {
         font-family: 'Noto Serif SC', serif;
-        color: #2c2c2c;
+        color: #F4F1EA;
         font-weight: 600;
         font-size: 1.6rem;
         letter-spacing: 1px;
-        border-bottom: 1px solid rgba(0,0,0,0.1);
+        border-bottom: 1px solid rgba(212, 175, 55, 0.2);
         padding-bottom: 1rem;
         margin-bottom: 2rem;
     }
@@ -233,48 +234,61 @@ st.markdown("""
     /* ==================== 信息框样式 ==================== */
     .stAlert {
         border-radius: 2px;
-        border: 1px solid rgba(0,0,0,0.1);
-        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        background: #fefdfb;
+        border: 1px solid rgba(212, 175, 55, 0.2);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        background: #34495e;
     }
     
     /* ==================== 进度条样式 ==================== */
     .stProgress > div > div > div {
-        background: linear-gradient(90deg, #4a5568 0%, #2c2c2c 100%);
+        background: linear-gradient(90deg, #d4af37 0%, #E5C974 100%);
     }
     
     /* ==================== 分隔线样式 ==================== */
     hr {
         border: none;
         height: 1px;
-        background: rgba(0,0,0,0.06);
+        background: rgba(212, 175, 55, 0.1);
         margin: 3rem 0;
     }
     
     /* ==================== 文本输入框样式 ==================== */
     .stTextInput > div > div > input {
         border-radius: 2px;
-        border: 1px solid rgba(0,0,0,0.1);
-        background: #fefdfb;
+        border: 1px solid rgba(212, 175, 55, 0.2);
+        background: #34495e;
+        color: #F4F1EA;
     }
     
     .stTextInput > div > div > input:focus {
-        border-color: #4a5568;
-        box-shadow: 0 0 0 2px rgba(74, 85, 104, 0.1);
+        border-color: #d4af37;
+        box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.1);
     }
     
     /* ==================== 文本区域样式 ==================== */
     .stTextArea > div > div > textarea {
         border-radius: 2px;
-        border: 1px solid rgba(0,0,0,0.1);
-        background: #fefdfb;
+        border: 1px solid rgba(212, 175, 55, 0.2);
+        background: #34495e;
+        color: #F4F1EA;
     }
     
     /* ==================== 选择框样式 ==================== */
     .stSelectbox > div > div {
         border-radius: 2px;
-        border: 1px solid rgba(0,0,0,0.1);
-        background: #fefdfb;
+        border: 1px solid rgba(212, 175, 55, 0.2);
+        background: #34495e;
+        color: #F4F1EA;
+    }
+    
+    /* ==================== 页面链接样式 ==================== */
+    [data-testid="stSidebar"] a {
+        color: #95a5a6 !important;
+        transition: all 0.3s ease;
+    }
+    
+    [data-testid="stSidebar"] a:hover {
+        color: #E5C974 !important;
     }
 </style>
 """, unsafe_allow_html=True)
