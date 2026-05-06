@@ -20,10 +20,9 @@ GLOBAL_STYLES = """
         background: #1e1e1e !important;
     }
 
-    /* ==================== 全局样式 - 增大字体提高清晰度 ==================== */
+    /* ==================== 全局样式 ==================== */
     * {
         font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
-        font-size: 16px;  /* 基础字体大小 */
     }
 
     /* 主背景 - 温暖的深灰 */
@@ -33,15 +32,9 @@ GLOBAL_STYLES = """
 
     /* ==================== 文本清晰度优化 ==================== */
     p, span, div {
-        color: #b8b8b8;  /* 提高对比度 */
+        color: #c0c0c0;  /* 提高对比度，更清晰 */
         line-height: 1.6;  /* 增加行高 */
     }
-
-    /* 标题更大更清晰 */
-    h1 { font-size: 2.5rem !important; }
-    h2 { font-size: 1.8rem !important; }
-    h3 { font-size: 1.4rem !important; }
-    h4 { font-size: 1.2rem !important; }
 
     /* ==================== 主标题样式 ==================== */
     .main-header {
