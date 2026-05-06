@@ -33,7 +33,7 @@ class LLMAdapter:
         self.base_url = config.get("base_url", "https://api.openai.com/v1")
         self.model = config.get("model", "gpt-4o-mini")
         self.temperature = config.get("temperature", 0.7)
-        self.max_tokens = config.get("max_tokens", 4096)
+        self.max_tokens = config.get("max_tokens", 100000)  # 增加到100000
         
         # 初始化客户端
         self._init_client()

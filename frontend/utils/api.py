@@ -17,7 +17,7 @@ class APIClient:
     
     def __init__(self, base_url: Optional[str] = None):
         self.base_url = base_url or Config.API_BASE_URL
-        self.timeout = 60  # 增加超时时间，因为 AI 生成需要时间
+        self.timeout = 600  # 10分钟超时，因为 AI 生成长内容需要时间
     
     def _request(
         self, 

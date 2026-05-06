@@ -97,7 +97,7 @@ class DramaEngine:
             messages=messages,
             model=self.model,
             temperature=0.7,
-            max_tokens=4096
+            max_tokens=100000  # 增加到100000
         )
         
         if not response.success:

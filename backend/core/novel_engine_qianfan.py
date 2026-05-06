@@ -30,7 +30,7 @@ class LLMAdapter:
     def __init__(self, config: Dict[str, Any]):
         self.model = config.get("model", "glm-5.1")
         self.temperature = config.get("temperature", 0.7)
-        self.max_tokens = config.get("max_tokens", 4096)
+        self.max_tokens = config.get("max_tokens", 100000)  # 增加到100000
         
         # 初始化千帆客户端
         self.client = QianfanClient(
@@ -504,7 +504,7 @@ async def test_novel_engine():
     config = {
         "model": "glm-5.1",
         "temperature": 0.7,
-        "max_tokens": 4096
+        "max_tokens": 100000  # 增加到100000
     }
     
     engine = NovelEngine(config)

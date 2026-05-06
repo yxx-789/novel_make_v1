@@ -62,7 +62,7 @@ class QianfanClient:
         api_key: str = None,
         api_url: str = None,
         model: str = None,
-        timeout: int = 60,
+        timeout: int = 600,  # 10分钟超时
         max_retries: int = 3
     ):
         self.api_key = api_key or self.API_KEY
@@ -76,7 +76,7 @@ class QianfanClient:
         messages: List[Dict[str, str]],
         model: str = None,
         temperature: float = 0.7,
-        max_tokens: int = 4096,
+        max_tokens: int = 100000,  # 增加到100000
         stream: bool = False,
         **kwargs
     ) -> QianfanResponse:
