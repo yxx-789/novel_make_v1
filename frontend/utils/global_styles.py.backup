@@ -29,18 +29,18 @@ GLOBAL_STYLES = """
 
     /* ==================== 防止页面闪烁 - 立即应用背景色 ==================== */
     html, body, [class*="css"] {
-        background: var(--bg-primary) !important;
+        background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%) !important;
     }
 
     /* ==================== 全局样式 ==================== */
     * {
         font-family: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
-        font-weight: 400;  /* 极细字体 */
+        font-weight: 300;  /* 极细字体 */
     }
 
-    /* 主背景 - 使用CSS变量，支持页面主题切换 */
+    /* 主背景 - 淡雅的灰白渐变 */
     .stApp {
-        background: var(--bg-primary);
+        background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
     }
 
     /* ==================== 文本样式 ==================== */
@@ -52,7 +52,7 @@ GLOBAL_STYLES = """
 
     /* ==================== 主标题样式 - 极简优雅 ==================== */
     .main-header {
-        font-family: 'Noto Sans SC', serif;
+        font-family: 'Noto Serif SC', serif;
         font-size: 3rem;
         font-weight: 400;
         text-align: center;
@@ -74,12 +74,12 @@ GLOBAL_STYLES = """
 
     /* ==================== 副标题样式 ==================== */
     .sub-header {
-        font-family: 'Noto Sans SC', serif;
+        font-family: 'Noto Serif SC', serif;
         font-size: 1.1rem;
         color: #94a3b8;
         text-align: center;
         margin-bottom: 3rem;
-        font-weight: 400;
+        font-weight: 300;
         letter-spacing: 1px;
     }
 
@@ -102,7 +102,7 @@ GLOBAL_STYLES = """
     }
 
     .feature-card h3 {
-        font-family: 'Noto Sans SC', serif;
+        font-family: 'Noto Serif SC', serif;
         color: #334155;
         font-size: 1.4rem;
         font-weight: 400;
@@ -148,7 +148,7 @@ GLOBAL_STYLES = """
     }
 
     [data-testid="stSidebar"] h1 {
-        font-family: 'Noto Sans SC', serif;
+        font-family: 'Noto Serif SC', serif;
         color: #334155;
         font-weight: 400;
         font-size: 1.4rem;
@@ -204,7 +204,7 @@ GLOBAL_STYLES = """
         background: rgba(255, 255, 255, 0.6);
         backdrop-filter: blur(10px);
         color: #334155;
-        font-weight: 400;
+        font-weight: 300;
     }
 
     .stTextInput > div > div > input:focus,
@@ -232,7 +232,7 @@ GLOBAL_STYLES = """
 
     /* ==================== 标题样式 - 极细字体 ==================== */
     h1, h2, h3, h4, h5, h6 {
-        font-family: 'Noto Sans SC', serif;
+        font-family: 'Noto Serif SC', serif;
         color: #334155;
         font-weight: 400;
     }
@@ -302,7 +302,7 @@ GLOBAL_STYLES = """
         color: #334155;
         border: 1px solid rgba(255, 255, 255, 0.8);
         border-radius: 16px;
-        font-weight: 400;
+        font-weight: 300;
     }
 
     /* ==================== 下载按钮 ==================== */
@@ -472,8 +472,8 @@ def get_page_theme_css(page_name: str) -> str:
     
     return f"""
     <style>
-        /* 页面背景色动态切换 - 使用!important覆盖全局样式 */
-        .stApp, [class*="css"], html, body {{
+        /* 页面背景色动态切换 */
+        html, body, .stApp {{
             background: {theme['bg']} !important;
             transition: background 0.8s ease-in-out !important;
         }}
