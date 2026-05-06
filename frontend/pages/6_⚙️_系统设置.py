@@ -9,7 +9,7 @@ from datetime import datetime
 st.set_page_config(
 
     page_title="系统设置 - AI 小说创作平台",
-    page_icon="⚙️",
+    page_icon="⚙",
     layout="wide"
 )
 
@@ -17,7 +17,7 @@ st.set_page_config(
 from utils.global_styles import apply_global_styles
 apply_global_styles()
 
-st.title("⚙️ 系统设置")
+st.title("⚙ 系统设置")
 
 # ==================== API 配置 ====================
 st.markdown("## 🔌 API 配置")
@@ -42,13 +42,13 @@ with st.form("api_config_form"):
         if new_api_url:
             Config.update_api_url(new_api_url)
             api_client.base_url = new_api_url
-            st.success(f"✅ API 地址已更新为: {new_api_url}")
+            st.success(f"✓ API 地址已更新为: {new_api_url}")
             st.rerun()
         else:
-            st.error("❌ API 地址不能为空")
+            st.error("✕ API 地址不能为空")
 
 # 显示当前配置
-with st.expander("📋 查看当前配置", expanded=False):
+with st.expander("▤ 查看当前配置", expanded=False):
     st.json({
         "API_BASE_URL": Config.API_BASE_URL,
         "DEFAULT_MODEL": Config.DEFAULT_MODEL,
@@ -58,7 +58,7 @@ with st.expander("📋 查看当前配置", expanded=False):
 
 # ==================== 连接测试 ====================
 st.markdown("---")
-st.markdown("## 🔍 连接测试")
+st.markdown("## ◉ 连接测试")
 
 col1, col2, col3 = st.columns([1, 1, 2])
 
@@ -70,14 +70,14 @@ with col1:
         if "error" not in health:
             status = health.get("status", "unknown")
             if status == "healthy":
-                st.success("✅ 后端服务正常")
+                st.success("✓ 后端服务正常")
                 st.json(health)
             else:
-                st.warning(f"⚠️ 状态: {status}")
+                st.warning(f"△ 状态: {status}")
                 st.json(health)
         else:
-            st.error(f"❌ 连接失败: {health['error']}")
-            st.info("💡 请检查：\n1. 后端服务是否启动\n2. API 地址是否正确\n3. 网络连接是否正常")
+            st.error(f"✕ 连接失败: {health['error']}")
+            st.info("○ 请检查：\n1. 后端服务是否启动\n2. API 地址是否正确\n3. 网络连接是否正常")
 
 with col2:
     if st.button("🤖 测试模型接口", use_container_width=True):
@@ -85,21 +85,21 @@ with col2:
             models = api_client.get_models()
         
         if "models" in models:
-            st.success(f"✅ 获取到 {len(models['models'])} 个模型")
+            st.success(f"✓ 获取到 {len(models['models'])} 个模型")
             st.json(models)
         else:
-            st.error(f"❌ 获取失败: {models.get('error', '未知错误')}")
+            st.error(f"✕ 获取失败: {models.get('error', '未知错误')}")
 
 with col3:
-    if st.button("📚 测试小说接口", use_container_width=True):
+    if st.button("❖ 测试小说接口", use_container_width=True):
         with st.spinner("正在测试..."):
             novels = api_client.get_novels()
         
         if "novels" in novels:
-            st.success(f"✅ 获取到 {len(novels['novels'])} 本小说")
+            st.success(f"✓ 获取到 {len(novels['novels'])} 本小说")
             st.json({"count": len(novels["novels"])})
         else:
-            st.error(f"❌ 获取失败: {novels.get('error', '未知错误')}")
+            st.error(f"✕ 获取失败: {novels.get('error', '未知错误')}")
 
 # ==================== 可用模型管理 ====================
 st.markdown("---")
@@ -137,7 +137,7 @@ if "models" in models_result and models_result["models"]:
                 margin-bottom: 1rem;
             ">
                 <h4 style="margin: 0; {'color: white;' if is_default else ''}">
-                    {'⭐ ' if is_default else ''}{model_name}
+                    {'✦ ' if is_default else ''}{model_name}
                 </h4>
                 <p style="margin: 0.5rem 0 0 0; opacity: 0.8; font-size: 0.9rem;">
                     ID: {model_id}
@@ -151,28 +151,28 @@ if "models" in models_result and models_result["models"]:
             # 设置为默认模型按钮
             if not is_default:
                 if st.button(
-                    f"⭐ 设为默认",
+                    f"✦ 设为默认",
                     key=f"set_default_{model_id}",
                     use_container_width=True
                 ):
                     Config.DEFAULT_MODEL = model_id
-                    st.success(f"✅ 已将 {model_name} 设置为默认模型")
+                    st.success(f"✓ 已将 {model_name} 设置为默认模型")
                     st.rerun()
             else:
-                st.info("✅ 当前默认模型")
+                st.info("✓ 当前默认模型")
     
     # 模型详细列表
-    with st.expander("📋 查看模型详细列表", expanded=False):
+    with st.expander("▤ 查看模型详细列表", expanded=False):
         for model in models:
             st.json(model)
 
 else:
-    st.warning("⚠️ 无法获取模型列表")
-    st.info("💡 请检查后端 API 连接是否正常")
+    st.warning("△ 无法获取模型列表")
+    st.info("○ 请检查后端 API 连接是否正常")
 
 # ==================== 默认模型设置 ====================
 st.markdown("---")
-st.markdown("## ⭐ 默认模型设置")
+st.markdown("## ✦ 默认模型设置")
 
 if "models" in models_result and models_result["models"]:
     model_options = {
@@ -192,18 +192,18 @@ if "models" in models_result and models_result["models"]:
     
     with col2:
         st.markdown("<br>", unsafe_allow_html=True)
-        if st.button("✅ 确认设置", use_container_width=True, type="primary"):
+        if st.button("✓ 确认设置", use_container_width=True, type="primary"):
             selected_model_id = model_options[selected_model_name]
             Config.DEFAULT_MODEL = selected_model_id
-            st.success(f"✅ 默认模型已设置为: {selected_model_name}")
+            st.success(f"✓ 默认模型已设置为: {selected_model_name}")
             st.rerun()
 
 else:
-    st.warning("⚠️ 暂无可选模型")
+    st.warning("△ 暂无可选模型")
 
 # ==================== 系统信息 ====================
 st.markdown("---")
-st.markdown("## 📊 系统信息")
+st.markdown("## ☰ 系统信息")
 
 col1, col2, col3 = st.columns(3)
 
@@ -232,7 +232,7 @@ with col3:
     
     if "novels" in novels_result:
         novel_count = len(novels_result["novels"])
-        st.metric("📚 小说总数", novel_count)
+        st.metric("❖ 小说总数", novel_count)
     
     if "models" in models_result:
         model_count = len(models_result["models"])
@@ -240,10 +240,10 @@ with col3:
 
 # ==================== 高级设置 ====================
 st.markdown("---")
-st.markdown("## 🔧 高级设置")
+st.markdown("## ⚙ 高级设置")
 
-with st.expander("⚙️ 展开高级设置", expanded=False):
-    st.warning("⚠️ 以下设置可能影响系统稳定性，请谨慎修改")
+with st.expander("⚙ 展开高级设置", expanded=False):
+    st.warning("△ 以下设置可能影响系统稳定性，请谨慎修改")
     
     col1, col2 = st.columns(2)
     
@@ -262,10 +262,10 @@ with st.expander("⚙️ 展开高级设置", expanded=False):
         
         if st.button("💾 保存超时设置"):
             api_client.timeout = timeout
-            st.success(f"✅ 超时时间已设置为 {timeout} 秒")
+            st.success(f"✓ 超时时间已设置为 {timeout} 秒")
     
     with col2:
-        st.markdown("### 🎨 界面设置")
+        st.markdown("### ✦ 界面设置")
         
         # 显示模式
         display_mode = st.radio(
@@ -276,13 +276,13 @@ with st.expander("⚙️ 展开高级设置", expanded=False):
         
         # 主题选择
         theme = st.selectbox(
-            "🎨 颜色主题",
+            "✦ 颜色主题",
             ["默认", "深色", "浅色"],
             help="选择界面主题颜色"
         )
         
-        if st.button("🎨 应用主题"):
-            st.info("💡 主题设置需要在重启应用后生效")
+        if st.button("✦ 应用主题"):
+            st.info("○ 主题设置需要在重启应用后生效")
 
 # ==================== 缓存管理 ====================
 st.markdown("---")
@@ -291,43 +291,43 @@ st.markdown("## 🗄️ 缓存管理")
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    if st.button("🗑️ 清空缓存", use_container_width=True):
+    if st.button("✕ 清空缓存", use_container_width=True):
         st.cache_data.clear()
-        st.success("✅ 缓存已清空")
+        st.success("✓ 缓存已清空")
 
 with col2:
-    if st.button("🔄 重载配置", use_container_width=True):
+    if st.button("↻ 重载配置", use_container_width=True):
         st.rerun()
 
 with col3:
-    if st.button("📊 查看缓存状态", use_container_width=True):
-        st.info("💡 Streamlit 会自动管理缓存")
+    if st.button("☰ 查看缓存状态", use_container_width=True):
+        st.info("○ Streamlit 会自动管理缓存")
 
 # ==================== 日志查看 ====================
 st.markdown("---")
-st.markdown("## 📋 操作日志")
+st.markdown("## ▤ 操作日志")
 
-with st.expander("📜 查看日志", expanded=False):
+with st.expander("☰ 查看日志", expanded=False):
     st.markdown("""
     ### 最近操作记录
     
-    - ✅ 2026-05-06 10:40:00 - 系统设置页面访问
-    - ✅ 2026-05-06 10:35:00 - API 连接测试
-    - ✅ 2026-05-06 10:30:00 - 模型列表获取
+    - ✓ 2026-05-06 10:40:00 - 系统设置页面访问
+    - ✓ 2026-05-06 10:35:00 - API 连接测试
+    - ✓ 2026-05-06 10:30:00 - 模型列表获取
     - ℹ️ 2026-05-06 10:25:00 - 系统初始化完成
     """)
     
-    st.info("💡 详细日志请查看后端服务器日志")
+    st.info("○ 详细日志请查看后端服务器日志")
 
 # ==================== 帮助文档 ====================
 st.markdown("---")
 st.markdown("## ❓ 帮助与支持")
 
-tab1, tab2, tab3 = st.tabs(["📖 使用指南", "🔧 故障排查", "📞 技术支持"])
+tab1, tab2, tab3 = st.tabs(["⬡ 使用指南", "⚙ 故障排查", "📞 技术支持"])
 
 with tab1:
     st.markdown("""
-    ### 📖 快速使用指南
+    ### ⬡ 快速使用指南
     
     #### 1️⃣ API 配置
     - 默认 API 地址：`http://localhost:8000`
@@ -349,9 +349,9 @@ with tab1:
 
 with tab2:
     st.markdown("""
-    ### 🔧 常见问题排查
+    ### ⚙ 常见问题排查
     
-    #### ❌ 后端连接失败
+    #### ✕ 后端连接失败
     
     **原因：**
     1. 后端服务未启动
@@ -365,7 +365,7 @@ with tab2:
     
     ---
     
-    #### ❌ 模型不可用
+    #### ✕ 模型不可用
     
     **原因：**
     1. 模型 API Key 未配置
@@ -379,7 +379,7 @@ with tab2:
     
     ---
     
-    #### ❌ 生成失败
+    #### ✕ 生成失败
     
     **原因：**
     1. 模型参数错误
@@ -400,7 +400,7 @@ with tab3:
     - **邮箱**: support@example.com
     - **文档**: https://docs.example.com
     
-    #### 💬 在线支持
+    #### ◐ 在线支持
     - **Discord**: https://discord.gg/example
     - **GitHub Issues**: https://github.com/example/issues
     
@@ -410,7 +410,7 @@ with tab3:
     2. 操作步骤描述
     3. 系统环境信息
     
-    #### 📚 相关资源
+    #### ❖ 相关资源
     - [Streamlit 官方文档](https://docs.streamlit.io)
     - [FastAPI 官方文档](https://fastapi.tiangolo.com)
     - [百度千帆文档](https://cloud.baidu.com/doc/WENXINWORKSHOP/index.html)
@@ -419,4 +419,4 @@ with tab3:
 # ==================== 页脚 ====================
 st.markdown("---")
 current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-st.caption(f"⚙️ 系统设置 | 最后更新: {current_time}")
+st.caption(f"⚙ 系统设置 | 最后更新: {current_time}")

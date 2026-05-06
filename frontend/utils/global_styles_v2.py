@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-全局样式 - 温暖夜色风主题（方案B）
-参考：Typora、Bear Dark
-温暖舒适，适合长时间阅读，文学感强
+全局样式 - 现代极简风主题（参考Linear/Notion）
+层次分明，温暖舒适，不压抑
 """
 
 GLOBAL_STYLES = """
@@ -15,19 +14,22 @@ GLOBAL_STYLES = """
         font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
-    /* 主背景 - 温暖的深灰 */
+    /* ==================== 方案A：现代极简风（推荐）==================== */
+    /* 参考：Linear、Notion、Bear */
+
+    /* 主背景 - 深灰黑，有呼吸感 */
     .stApp {
-        background: #1e1e1e;
+        background: #1a1a1a;
     }
 
-    /* ==================== 主标题样式 ==================== */
+    /* ==================== 标题样式 ==================== */
     .main-header {
         font-family: 'Noto Serif SC', serif;
         font-size: 2.8rem;
         font-weight: 400;
         text-align: center;
         padding: 3rem 0 1.5rem 0;
-        color: #d4d4d4;
+        color: #e8e8e8;
         letter-spacing: 2px;
         position: relative;
     }
@@ -37,7 +39,7 @@ GLOBAL_STYLES = """
         display: block;
         width: 48px;
         height: 1px;
-        background: linear-gradient(90deg, transparent, #e8c47c, transparent);
+        background: linear-gradient(90deg, transparent, #6366f1, transparent);
         margin: 1.2rem auto 0;
         opacity: 0.4;
     }
@@ -46,33 +48,33 @@ GLOBAL_STYLES = """
     .sub-header {
         font-family: 'Noto Serif SC', serif;
         font-size: 1.1rem;
-        color: #808080;
+        color: #999;
         text-align: center;
         margin-bottom: 3rem;
         font-weight: 300;
         letter-spacing: 1px;
     }
 
-    /* ==================== 卡片样式 - 三层次设计 ==================== */
+    /* ==================== 卡片样式 - 分层设计 ==================== */
     .feature-card {
-        background: #282828;
+        background: #242424;
         padding: 2rem;
         border-radius: 8px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        box-shadow: 0 1px 2px rgba(0,0,0,0.2);
         margin: 1.2rem 0;
-        border: 1px solid #333;
+        border: 1px solid #2a2a2a;
         transition: all 0.3s ease;
     }
 
     .feature-card:hover {
         box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         transform: translateY(-1px);
-        border-color: #444;
+        border-color: #3a3a3a;
     }
 
     .feature-card h3 {
         font-family: 'Noto Serif SC', serif;
-        color: #d4d4d4;
+        color: #e8e8e8;
         font-size: 1.3rem;
         font-weight: 500;
         margin-bottom: 0.8rem;
@@ -104,20 +106,20 @@ GLOBAL_STYLES = """
         content: '›';
         position: absolute;
         left: 0;
-        color: #e8c47c;
+        color: #6366f1;
         font-weight: 500;
         font-size: 1.2rem;
     }
 
-    /* ==================== 侧边栏样式 - 最深层次 ==================== */
+    /* ==================== 侧边栏样式 - 更深的层次 ==================== */
     [data-testid="stSidebar"] {
-        background: #181818;
+        background: #141414;
         border-right: 1px solid #2a2a2a;
     }
 
     [data-testid="stSidebar"] h1 {
         font-family: 'Noto Serif SC', serif;
-        color: #d4d4d4;
+        color: #e8e8e8;
         font-weight: 500;
         font-size: 1.3rem;
         letter-spacing: 1px;
@@ -129,13 +131,13 @@ GLOBAL_STYLES = """
     }
 
     [data-testid="stSidebar"] a:hover {
-        color: #e8c47c !important;
+        color: #e8e8e8 !important;
     }
 
-    /* ==================== 按钮样式 - 温暖的点缀 ==================== */
+    /* ==================== 按钮样式 - 柔和的点缀 ==================== */
     .stButton > button {
-        background: #e8c47c;
-        color: #1e1e1e;
+        background: #6366f1;
+        color: #fff;
         border: none;
         border-radius: 6px;
         padding: 0.6rem 1.8rem;
@@ -146,34 +148,34 @@ GLOBAL_STYLES = """
     }
 
     .stButton > button:hover {
-        background: #d4a85c;
-        box-shadow: 0 2px 8px rgba(232, 196, 124, 0.3);
+        background: #818cf8;
+        box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
     }
 
     .stButton > button[kind="secondary"] {
         background: transparent;
-        border: 1px solid #444;
+        border: 1px solid #3a3a3a;
         color: #888;
     }
 
     .stButton > button[kind="secondary"]:hover {
-        border-color: #e8c47c;
-        color: #e8c47c;
+        border-color: #6366f1;
+        color: #e8e8e8;
     }
 
     /* ==================== 输入框样式 ==================== */
     .stTextInput > div > div > input,
     .stTextArea > div > div > textarea {
         border-radius: 6px;
-        border: 1px solid #333;
-        background: #282828;
-        color: #d4d4d4;
+        border: 1px solid #2a2a2a;
+        background: #1e1e1e;
+        color: #e8e8e8;
     }
 
     .stTextInput > div > div > input:focus,
     .stTextArea > div > div > textarea:focus {
-        border-color: #e8c47c;
-        box-shadow: 0 0 0 3px rgba(232, 196, 124, 0.1);
+        border-color: #6366f1;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
     }
 
     .stTextInput > div > div > input::placeholder,
@@ -185,15 +187,15 @@ GLOBAL_STYLES = """
     .stSelectbox > div > div,
     .stMultiselect > div > div {
         border-radius: 6px;
-        border: 1px solid #333;
-        background: #282828;
-        color: #d4d4d4;
+        border: 1px solid #2a2a2a;
+        background: #1e1e1e;
+        color: #e8e8e8;
     }
 
     /* ==================== 标题样式 ==================== */
     h1, h2, h3, h4, h5, h6 {
         font-family: 'Noto Serif SC', serif;
-        color: #d4d4d4;
+        color: #e8e8e8;
     }
 
     h2 {
@@ -211,21 +213,21 @@ GLOBAL_STYLES = """
     /* ==================== 信息框样式 ==================== */
     .stAlert {
         border-radius: 6px;
-        border: 1px solid #333;
-        background: #282828;
-        color: #d4d4d4;
+        border: 1px solid #2a2a2a;
+        background: #1e1e1e;
+        color: #e8e8e8;
     }
 
     /* ==================== 进度条样式 ==================== */
     .stProgress > div > div > div {
-        background: #e8c47c;
+        background: #6366f1;
     }
 
     /* ==================== 分隔线样式 ==================== */
     hr {
         border: none;
         height: 1px;
-        background: #333;
+        background: #2a2a2a;
         margin: 2rem 0;
     }
 
@@ -242,8 +244,8 @@ GLOBAL_STYLES = """
 
     /* ==================== 表单样式 ==================== */
     .stForm {
-        border: 1px solid #333;
-        background: #282828;
+        border: 1px solid #2a2a2a;
+        background: #1e1e1e;
         padding: 1.5rem;
         border-radius: 8px;
     }
@@ -256,15 +258,15 @@ GLOBAL_STYLES = """
 
     /* ==================== 数字输入框 ==================== */
     .stNumberInput > div > div > input {
-        background: #282828;
-        color: #d4d4d4;
-        border: 1px solid #333;
+        background: #1e1e1e;
+        color: #e8e8e8;
+        border: 1px solid #2a2a2a;
     }
 
     /* ==================== 下载按钮 ==================== */
     .stDownloadButton > button {
-        background: #e8c47c;
-        color: #1e1e1e;
+        background: #6366f1;
+        color: #fff;
         border-radius: 6px;
         padding: 0.6rem 1.8rem;
         font-weight: 500;
@@ -272,7 +274,7 @@ GLOBAL_STYLES = """
     }
 
     .stDownloadButton > button:hover {
-        background: #d4a85c;
+        background: #818cf8;
     }
 
     /* ==================== 标签页样式 ==================== */
@@ -285,51 +287,78 @@ GLOBAL_STYLES = """
     }
 
     .stTabs [aria-selected="true"] {
-        color: #e8c47c;
+        color: #e8e8e8;
     }
 
     /* ==================== 表格样式 ==================== */
     .stDataFrame {
-        background: #282828;
-        color: #d4d4d4;
+        background: #1e1e1e;
+        color: #e8e8e8;
     }
 
     .stDataFrame th {
-        background: #181818;
-        color: #e8c47c;
+        background: #141414;
+        color: #999;
     }
 
     /* ==================== 文件上传 ==================== */
     .stFileUploader > div > div {
-        background: #282828;
-        border: 2px dashed #444;
+        background: #1e1e1e;
+        border: 2px dashed #2a2a2a;
         color: #888;
     }
 
     .stFileUploader > div > div:hover {
-        border-color: #e8c47c;
-    }
-
-    /* ==================== 状态色（莫兰迪色调）==================== */
-    .stAlert[data-baseweb="notification"][kind="positive"] {
-        background: #2d3d2e;
-        border-color: #4a5d4b;
-    }
-
-    .stAlert[data-baseweb="notification"][kind="negative"] {
-        background: #4d2e2e;
-        border-color: #6d3d3d;
-    }
-
-    .stAlert[data-baseweb="notification"][kind="warning"] {
-        background: #4d3d2e;
-        border-color: #6d5d3d;
+        border-color: #6366f1;
     }
 </style>
 """
+
+
+# 古典符号映射（替代emoji）
+ICON_MAP = {
+    # 页面标题
+    "首页": "◈",
+    "小说创作": "✦",
+    "小说管理": "❖",
+    "剧本转换": "▣",
+    "AI聊天": "◐",
+    "系统设置": "⚙",
+
+    # 操作按钮
+    "创建": "✦",
+    "生成": "▶",
+    "导出": "▤",
+    "刷新": "↻",
+    "删除": "✕",
+    "查看": "◉",
+    "复制": "⎘",
+    "编辑": "✎",
+    "保存": "▼",
+
+    # 状态
+    "成功": "✓",
+    "错误": "✕",
+    "警告": "△",
+    "信息": "○",
+
+    # 内容类型
+    "小说": "⬡",
+    "章节": "◇",
+    "角色": "◆",
+    "大纲": "☰",
+    "蓝图": "☱",
+}
 
 
 def apply_global_styles():
     """应用全局样式"""
     import streamlit as st
     st.markdown(GLOBAL_STYLES, unsafe_allow_html=True)
+
+
+def replace_emoji(text: str) -> str:
+    """替换emoji为古典符号"""
+    for emoji, symbol in ICON_MAP.items():
+        text = text.replace(emoji, symbol)
+    return text

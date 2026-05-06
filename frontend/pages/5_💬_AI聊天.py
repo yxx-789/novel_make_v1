@@ -9,7 +9,7 @@ import time
 st.set_page_config(
 
     page_title="AI聊天 - AI 小说创作平台",
-    page_icon="💬",
+    page_icon="◐",
     layout="wide"
 )
 
@@ -17,7 +17,7 @@ st.set_page_config(
 from utils.global_styles import apply_global_styles
 apply_global_styles()
 
-st.title("💬 AI 聊天")
+st.title("◐ AI 聊天")
 
 # ==================== 初始化会话状态 ====================
 if "chat_history" not in st.session_state:
@@ -31,7 +31,7 @@ if "current_model" not in st.session_state:
 
 # ==================== 侧边栏配置 ====================
 with st.sidebar:
-    st.markdown("## ⚙️ 聊天设置")
+    st.markdown("## ⚙ 聊天设置")
     
     # 获取可用模型
     with st.spinner("加载模型列表..."):
@@ -58,7 +58,7 @@ with st.sidebar:
         
         if selected_model != st.session_state.current_model:
             st.session_state.current_model = selected_model
-            st.info(f"✅ 已切换到: {model_names.get(selected_model, selected_model)}")
+            st.info(f"✓ 已切换到: {model_names.get(selected_model, selected_model)}")
     
     st.markdown("---")
     
@@ -68,13 +68,13 @@ with st.sidebar:
     col1, col2 = st.columns(2)
     
     with col1:
-        if st.button("🆕 新对话", use_container_width=True):
+        if st.button("✦ 新对话", use_container_width=True):
             st.session_state.chat_history = []
             st.session_state.conversation_id = None
             st.rerun()
     
     with col2:
-        if st.button("🗑️ 清空历史", use_container_width=True, type="secondary"):
+        if st.button("✕ 清空历史", use_container_width=True, type="secondary"):
             st.session_state.chat_history = []
             st.rerun()
     
@@ -82,15 +82,15 @@ with st.sidebar:
     
     # 对话历史
     if st.session_state.chat_history:
-        st.markdown("## 📜 历史记录")
+        st.markdown("## ☰ 历史记录")
         
         for idx, message in enumerate(st.session_state.chat_history):
             if message["role"] == "user":
-                st.caption(f"👤 你: {message['content'][:50]}...")
+                st.caption(f"◆ 你: {message['content'][:50]}...")
             else:
                 st.caption(f"🤖 AI: {message['content'][:50]}...")
     else:
-        st.info("💡 还没有对话记录")
+        st.info("○ 还没有对话记录")
 
 # ==================== 主聊天界面 ====================
 # 聊天容器
@@ -105,9 +105,9 @@ with chat_container:
             padding: 3rem 1rem;
             color: #666;
         ">
-            <h2>💬 欢迎使用 AI 聊天</h2>
+            <h2>◐ 欢迎使用 AI 聊天</h2>
             <p>选择模型后，开始与 AI 对话吧！</p>
-            <p>💡 你可以询问：创作建议、故事灵感、写作技巧等</p>
+            <p>○ 你可以询问：创作建议、故事灵感、写作技巧等</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -161,14 +161,14 @@ with chat_container:
                         st.session_state.conversation_id = result["conversation_id"]
                 
                 elif "error" in result:
-                    error_msg = f"❌ 错误: {result['error']}"
+                    error_msg = f"✕ 错误: {result['error']}"
                     message_placeholder.markdown(error_msg)
                     st.session_state.chat_history.append({
                         "role": "assistant", 
                         "content": error_msg
                     })
                 else:
-                    error_msg = "❌ 未知错误"
+                    error_msg = "✕ 未知错误"
                     message_placeholder.markdown(error_msg)
                     st.session_state.chat_history.append({
                         "role": "assistant", 
@@ -176,7 +176,7 @@ with chat_container:
                     })
             
             except Exception as e:
-                error_msg = f"❌ 请求失败: {str(e)}"
+                error_msg = f"✕ 请求失败: {str(e)}"
                 message_placeholder.markdown(error_msg)
                 st.session_state.chat_history.append({
                     "role": "assistant", 
@@ -185,55 +185,55 @@ with chat_container:
 
 # ==================== 预设问题 ====================
 st.markdown("---")
-st.markdown("## 💡 预设问题")
+st.markdown("## ○ 预设问题")
 
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    if st.button("📖 小说创作建议", use_container_width=True):
+    if st.button("⬡ 小说创作建议", use_container_width=True):
         st.session_state.preset_question = "请给我一些小说创作的实用建议"
         st.rerun()
 
 with col2:
-    if st.button("🎭 角色塑造技巧", use_container_width=True):
+    if st.button("◆ 角色塑造技巧", use_container_width=True):
         st.session_state.preset_question = "如何塑造生动的小说角色？"
         st.rerun()
 
 with col3:
-    if st.button("📝 写作风格指导", use_container_width=True):
+    if st.button("☰ 写作风格指导", use_container_width=True):
         st.session_state.preset_question = "如何形成独特的写作风格？"
         st.rerun()
 
 # ==================== 创意灵感 ====================
 st.markdown("---")
-st.markdown("## ✨ 创意灵感生成")
+st.markdown("## ✦ 创意灵感生成")
 
 with st.form("inspiration_form"):
     col1, col2 = st.columns(2)
     
     with col1:
         genre = st.selectbox(
-            "📚 小说类型",
+            "❖ 小说类型",
             ["玄幻", "仙侠", "武侠", "都市", "科幻", "悬疑", "历史", "奇幻"]
         )
         
         theme = st.text_input(
-            "🎯 故事主题",
+            "◇ 故事主题",
             placeholder="例如：成长、复仇、爱情"
         )
     
     with col2:
         setting = st.text_input(
-            "🌍 故事背景",
+            "◉ 故事背景",
             placeholder="例如：未来都市、古代江湖、异世界"
         )
         
         character = st.text_input(
-            "👤 主角设定",
+            "◆ 主角设定",
             placeholder="例如：落魄剑客、天才科学家"
         )
     
-    submitted = st.form_submit_button("🎨 生成创意灵感", use_container_width=True)
+    submitted = st.form_submit_button("✦ 生成创意灵感", use_container_width=True)
     
     if submitted:
         if not all([genre, theme, setting, character]):
@@ -275,7 +275,7 @@ if st.session_state.chat_history:
     
     with col1:
         user_messages = len([m for m in st.session_state.chat_history if m["role"] == "user"])
-        st.metric("👤 用户消息", user_messages)
+        st.metric("◆ 用户消息", user_messages)
     
     with col2:
         ai_messages = len([m for m in st.session_state.chat_history if m["role"] == "assistant"])
@@ -283,20 +283,20 @@ if st.session_state.chat_history:
     
     with col3:
         total_words = sum(len(m["content"]) for m in st.session_state.chat_history)
-        st.metric("📝 总字数", total_words)
+        st.metric("☰ 总字数", total_words)
 
 # ==================== 聊天导出 ====================
 if st.session_state.chat_history:
     st.markdown("---")
-    st.markdown("## 📤 导出对话")
+    st.markdown("## ▤ 导出对话")
     
     col1, col2 = st.columns(2)
     
     with col1:
         # 显示对话内容
-        with st.expander("📋 查看完整对话", expanded=False):
+        with st.expander("▤ 查看完整对话", expanded=False):
             for message in st.session_state.chat_history:
-                role_icon = "👤" if message["role"] == "user" else "🤖"
+                role_icon = "◆" if message["role"] == "user" else "🤖"
                 st.markdown(f"**{role_icon} {message['role'].title()}:**")
                 st.markdown(message["content"])
                 st.markdown("---")
@@ -310,9 +310,9 @@ if st.session_state.chat_history:
         
         st.code(chat_text, language=None)
         
-        if st.button("📋 复制对话", use_container_width=True):
-            st.success("✅ 对话内容已显示在上方，可手动复制")
+        if st.button("▤ 复制对话", use_container_width=True):
+            st.success("✓ 对话内容已显示在上方，可手动复制")
 
 # ==================== 页脚 ====================
 st.markdown("---")
-st.caption(f"💬 当前模型: {st.session_state.current_model}")
+st.caption(f"◐ 当前模型: {st.session_state.current_model}")

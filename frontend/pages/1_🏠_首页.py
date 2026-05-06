@@ -9,7 +9,7 @@ from datetime import datetime
 st.set_page_config(
 
     page_title="首页 - AI 小说创作平台",
-    page_icon="🏠",
+    page_icon="◈",
     layout="wide"
 )
 
@@ -17,10 +17,10 @@ st.set_page_config(
 from utils.global_styles import apply_global_styles
 apply_global_styles()
 
-st.title("🏠 首页")
+st.title("◈ 首页")
 
 # ==================== 系统状态检查 ====================
-st.markdown("## 📊 系统状态")
+st.markdown("## ☰ 系统状态")
 
 col1, col2, col3 = st.columns(3)
 
@@ -32,13 +32,13 @@ with col1:
     if "error" not in health:
         status = health.get("status", "unknown")
         if status == "healthy":
-            st.success("✅ 后端服务正常")
+            st.success("✓ 后端服务正常")
             st.metric("状态", "在线", delta="健康")
         else:
-            st.warning("⚠️ 后端服务异常")
+            st.warning("△ 后端服务异常")
             st.metric("状态", status)
     else:
-        st.error("❌ 后端服务离线")
+        st.error("✕ 后端服务离线")
         st.metric("状态", "离线", delta="无法连接")
         st.error(f"错误信息: {health['error']}")
 
@@ -49,10 +49,10 @@ with col2:
     
     if "models" in models:
         model_count = len(models["models"])
-        st.success(f"✅ 可用模型: {model_count} 个")
+        st.success(f"✓ 可用模型: {model_count} 个")
         st.metric("模型数量", model_count)
     else:
-        st.warning("⚠️ 无法获取模型列表")
+        st.warning("△ 无法获取模型列表")
         st.metric("模型数量", 0)
 
 # 获取小说统计
@@ -62,10 +62,10 @@ with col3:
     
     if "novels" in novels:
         novel_count = len(novels["novels"])
-        st.info(f"📚 已创建小说: {novel_count} 本")
+        st.info(f"❖ 已创建小说: {novel_count} 本")
         st.metric("小说数量", novel_count)
     else:
-        st.info("📚 暂无小说")
+        st.info("❖ 暂无小说")
         st.metric("小说数量", 0)
 
 # ==================== 可用模型详情 ====================
@@ -97,15 +97,15 @@ else:
 
 # ==================== 快速开始指南 ====================
 st.markdown("---")
-st.markdown("## 🚀 快速开始指南")
+st.markdown("## ▶ 快速开始指南")
 
-tab1, tab2, tab3 = st.tabs(["📖 新手教程", "💡 创作技巧", "❓ 常见问题"])
+tab1, tab2, tab3 = st.tabs(["⬡ 新手教程", "○ 创作技巧", "❓ 常见问题"])
 
 with tab1:
     st.markdown("""
-    ### 📝 第一步：创建小说
+    ### ☰ 第一步：创建小说
     
-    1. 点击左侧导航栏的 **"✍️ 小说创作"**
+    1. 点击左侧导航栏的 **"✦ 小说创作"**
     2. 填写小说基本信息：
        - 小说标题
        - 小说类型（玄幻、都市、科幻等）
@@ -114,7 +114,7 @@ with tab1:
     
     ---
     
-    ### 🎨 第二步：生成故事蓝图
+    ### ✦ 第二步：生成故事蓝图
     
     1. 选择刚创建的小说
     2. 点击"生成蓝图"按钮
@@ -125,7 +125,7 @@ with tab1:
     
     ---
     
-    ### 📋 第三步：生成章节大纲
+    ### ▤ 第三步：生成章节大纲
     
     1. 在小说详情页面点击"生成大纲"
     2. 设置章节数量（建议 3-10 章）
@@ -133,7 +133,7 @@ with tab1:
     
     ---
     
-    ### ✍️ 第四步：生成章节内容
+    ### ✦ 第四步：生成章节内容
     
     1. 点击"生成章节"按钮
     2. 选择要生成的章节编号
@@ -143,7 +143,7 @@ with tab1:
 
 with tab2:
     st.markdown("""
-    ### 💡 提高创作质量的技巧
+    ### ○ 提高创作质量的技巧
     
     #### 1️⃣ 明确故事主题
     - 选择清晰的主题词（如"成长"、"复仇"、"探险"）
@@ -219,7 +219,7 @@ if "novels" in novels and novels["novels"]:
     
     for novel in novels["novels"][:5]:  # 显示最近 5 本
         with st.expander(
-            f"📖 {novel.get('title', '未知标题')} - {novel.get('created_at', '未知时间')}",
+            f"⬡ {novel.get('title', '未知标题')} - {novel.get('created_at', '未知时间')}",
             expanded=False
         ):
             col1, col2 = st.columns(2)
@@ -232,7 +232,7 @@ if "novels" in novels and novels["novels"]:
                 st.markdown(f"**创建时间**: {novel.get('created_at', '未知')}")
                 st.markdown(f"**ID**: `{novel.get('id', '未知')}`")
 else:
-    st.info("暂无小说，去创建第一本吧！ 📝")
+    st.info("暂无小说，去创建第一本吧！ ☰")
 
 # ==================== 页脚 ====================
 st.markdown("---")

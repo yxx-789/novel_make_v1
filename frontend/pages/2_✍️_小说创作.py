@@ -7,7 +7,7 @@ from utils.config import Config
 
 st.set_page_config(
     page_title="小说创作 - AI 小说创作平台",
-    page_icon="✍️",
+    page_icon="✦",
     layout="wide"
 )
 
@@ -15,18 +15,18 @@ st.set_page_config(
 from utils.global_styles import apply_global_styles
 apply_global_styles()
 
-st.title("✍️ 小说创作")
+st.title("✦ 小说创作")
 
 # ==================== 创建新小说 ====================
-st.markdown("## 📝 创建新小说")
-st.caption("💡 提示：带 * 的为必填项")
+st.markdown("## ☰ 创建新小说")
+st.caption("○ 提示：带 * 的为必填项")
 
 with st.form("create_novel_form", clear_on_submit=True):
     col1, col2 = st.columns(2)
     
     with col1:
         novel_title = st.text_input(
-            "📖 小说标题 *",
+            "⬡ 小说标题 *",
             placeholder="例如：修仙之路",
             max_chars=50,
             help="给你的小说起一个吸引人的标题"
@@ -34,7 +34,7 @@ with st.form("create_novel_form", clear_on_submit=True):
         
         # 后端支持的类型（枚举值）
         novel_genre = st.selectbox(
-            "📚 小说类型 *",
+            "❖ 小说类型 *",
             [
                 "玄幻", "仙侠", "武侠", "都市", 
                 "言情", "科幻", "悬疑", "历史", "其他"
@@ -45,7 +45,7 @@ with st.form("create_novel_form", clear_on_submit=True):
     with col2:
         # topic 是必填项（后端要求）
         novel_topic = st.text_area(
-            "🎯 故事梗概 *",
+            "◇ 故事梗概 *",
             placeholder="例如：一个少年在修仙世界中不断成长，最终成为强者的故事",
             max_chars=500,
             height=100,
@@ -61,9 +61,9 @@ with st.form("create_novel_form", clear_on_submit=True):
         )
     
     # 高级选项
-    with st.expander("⚙️ 高级选项"):
+    with st.expander("⚙ 高级选项"):
         novel_style = st.text_area(
-            "🎨 写作风格（可选）",
+            "✦ 写作风格（可选）",
             placeholder="例如：轻松幽默、热血激昂、温馨治愈",
             max_chars=200,
             height=80,
@@ -73,7 +73,7 @@ with st.form("create_novel_form", clear_on_submit=True):
         col3, col4 = st.columns(2)
         with col3:
             total_chapters = st.number_input(
-                "📖 总章节数",
+                "⬡ 总章节数",
                 min_value=1,
                 max_value=1000,
                 value=10,
@@ -82,7 +82,7 @@ with st.form("create_novel_form", clear_on_submit=True):
         
         with col4:
             target_word_count = st.number_input(
-                "📝 每章目标字数",
+                "☰ 每章目标字数",
                 min_value=500,
                 max_value=10000,
                 value=3000,
@@ -91,7 +91,7 @@ with st.form("create_novel_form", clear_on_submit=True):
             )
     
     # 提交按钮
-    submitted = st.form_submit_button("🚀 创建小说", use_container_width=True, type="primary")
+    submitted = st.form_submit_button("▶ 创建小说", use_container_width=True, type="primary")
     
     if submitted:
         if not novel_title or not novel_genre or not novel_topic:
@@ -114,10 +114,10 @@ with st.form("create_novel_form", clear_on_submit=True):
                     novel_data = result.get("data", {})
                     novel_id = novel_data.get("novel_id")
                     
-                    st.success(f"✅ 小说创建成功！")
+                    st.success(f"✓ 小说创建成功！")
                     
                     if novel_id:
-                        st.info(f"📋 小说 ID: `{novel_id}`")
+                        st.info(f"▤ 小说 ID: `{novel_id}`")
                         
                         # 保存到 session_state
                         if "current_novel" not in st.session_state:
@@ -132,14 +132,14 @@ with st.form("create_novel_form", clear_on_submit=True):
                         st.info("👇 小说创建成功！请在下方选择刚创建的小说，开始生成蓝图")
                     
                 elif result.get("error"):
-                    st.error(f"❌ 创建失败: {result['error']}")
+                    st.error(f"✕ 创建失败: {result['error']}")
                 else:
-                    st.error("❌ 创建失败: 未知错误")
+                    st.error("✕ 创建失败: 未知错误")
 
 st.markdown("---")
 
 # ==================== 选择小说并创作 ====================
-st.markdown("## 📚 选择小说进行创作")
+st.markdown("## ❖ 选择小说进行创作")
 
 with st.spinner("加载小说列表..."):
     novels_result = api_client.get_novels()
@@ -155,8 +155,8 @@ elif novels_result.get("data"):
 
 # 检查错误
 if novels_result.get("error"):
-    st.error(f"❌ 获取小说列表失败: {novels_result['error']}")
-    st.info("💡 请检查：\n1. 后端服务是否启动\n2. API 地址是否正确（在系统设置页面配置）")
+    st.error(f"✕ 获取小说列表失败: {novels_result['error']}")
+    st.info("○ 请检查：\n1. 后端服务是否启动\n2. API 地址是否正确（在系统设置页面配置）")
 
 if novels:
     # 创建选择框
@@ -169,13 +169,13 @@ if novels:
             genre = n.get("genre") or "未知类型"
             topic = n.get("topic", "")[:50] + "..." if len(n.get("topic", "")) > 50 else n.get("topic", "")
             
-            label = f"📖 {title} ({genre}) - ID: {novel_id}"
+            label = f"⬡ {title} ({genre}) - ID: {novel_id}"
             if topic:
                 label += f" | {topic}"
             
             novel_options[label] = n
         except Exception as e:
-            st.warning(f"⚠️ 跳过一条数据: {e}")
+            st.warning(f"△ 跳过一条数据: {e}")
     
     if novel_options:
         selected_label = st.selectbox(
@@ -188,7 +188,7 @@ if novels:
         novel_id = selected_novel.get("novel_id") or selected_novel.get("id")
         
         # 显示小说信息
-        with st.expander("📖 小说详情", expanded=True):
+        with st.expander("⬡ 小说详情", expanded=True):
             st.markdown(f"**标题**: {selected_novel.get('title', '未知')}")
             st.markdown(f"**类型**: {selected_novel.get('genre', '未设置')}")
             st.markdown(f"**故事梗概**: {selected_novel.get('topic', '未设置')}")
@@ -202,27 +202,27 @@ if novels:
         st.markdown("---")
         
         # ==================== 步骤一：生成蓝图 ====================
-        st.markdown("### 🎨 步骤一：生成故事蓝图")
+        st.markdown("### ✦ 步骤一：生成故事蓝图")
         st.info("""
-        📋 **蓝图包含**：
-        - 🌍 世界观设定（时代背景、地点、力量体系等）
+        ▤ **蓝图包含**：
+        - ◉ 世界观设定（时代背景、地点、力量体系等）
         - 👥 角色档案（主角、配角、反派的详细信息）
-        - 📖 情节蓝图（核心冲突、高潮、结局等）
+        - ⬡ 情节蓝图（核心冲突、高潮、结局等）
         """)
         
-        if st.button("🎯 生成蓝图", use_container_width=True, type="primary"):
+        if st.button("◇ 生成蓝图", use_container_width=True, type="primary"):
             with st.spinner("正在生成蓝图，AI 正在创作中，请稍候..."):
                 result = api_client.generate_blueprint(novel_id)
                 
                 if result.get("success"):
-                    st.success("✅ 蓝图生成成功！")
+                    st.success("✓ 蓝图生成成功！")
                     
                     blueprint_data = result.get("data", {})
                     
                     if blueprint_data:
-                        with st.expander("📋 查看蓝图内容", expanded=True):
+                        with st.expander("▤ 查看蓝图内容", expanded=True):
                             # 显示蓝图结构
-                            st.markdown("#### 🌍 世界观设定")
+                            st.markdown("#### ◉ 世界观设定")
                             world = blueprint_data.get("world_setting", {})
                             if world:
                                 st.markdown(f"- **时代**: {world.get('era', '未设置')}")
@@ -234,7 +234,7 @@ if novels:
                             for i, char in enumerate(characters[:5], 1):  # 只显示前5个
                                 st.markdown(f"**{i}. {char.get('name', '未知')}** ({char.get('role', '未知角色')})")
                             
-                            st.markdown("#### 📖 情节蓝图")
+                            st.markdown("#### ⬡ 情节蓝图")
                             plot = blueprint_data.get("plot_blueprint", {})
                             if plot:
                                 st.markdown(f"- **核心冲突**: {plot.get('main_conflict', '未设置')}")
@@ -242,30 +242,30 @@ if novels:
                                 st.markdown(f"- **结局**: {plot.get('resolution', '未设置')}")
                             
                             # 完整数据
-                            with st.expander("🔍 查看完整数据"):
+                            with st.expander("◉ 查看完整数据"):
                                 st.json(blueprint_data)
                     
                 elif result.get("error"):
-                    st.error(f"❌ 生成失败: {result['error']}")
+                    st.error(f"✕ 生成失败: {result['error']}")
                 else:
-                    st.error("❌ 生成失败: 未知错误")
+                    st.error("✕ 生成失败: 未知错误")
         
         st.markdown("---")
         
         # ==================== 步骤二：生成章节大纲 ====================
-        st.markdown("### 📋 步骤二：生成章节大纲")
+        st.markdown("### ▤ 步骤二：生成章节大纲")
         
-        if st.button("📝 生成大纲", use_container_width=True, type="primary"):
+        if st.button("☰ 生成大纲", use_container_width=True, type="primary"):
             with st.spinner("正在生成章节大纲，AI 正在创作中..."):
                 result = api_client.generate_outline(novel_id)
                 
                 if result.get("success"):
-                    st.success("✅ 大纲生成成功！")
+                    st.success("✓ 大纲生成成功！")
                     
                     outline_data = result.get("data", [])
                     
                     if outline_data:
-                        st.markdown("#### 📚 章节大纲")
+                        st.markdown("#### ❖ 章节大纲")
                         
                         for outline in outline_data[:10]:  # 只显示前10章
                             chapter_num = outline.get("chapter_num", "?")
@@ -281,18 +281,18 @@ if novels:
                                     margin: 0.5rem 0;
                                     color: white;
                                 ">
-                                    <h4 style="margin: 0; color: white;">📖 第 {chapter_num} 章: {title}</h4>
+                                    <h4 style="margin: 0; color: white;">⬡ 第 {chapter_num} 章: {title}</h4>
                                     <p style="margin: 0.5rem 0 0 0; opacity: 0.9;">{summary}</p>
                                 </div>
                                 """, unsafe_allow_html=True)
                     
                 elif result.get("error"):
-                    st.error(f"❌ 生成失败: {result['error']}")
+                    st.error(f"✕ 生成失败: {result['error']}")
         
         st.markdown("---")
         
         # ==================== 步骤三：生成章节内容 ====================
-        st.markdown("### ✍️ 步骤三：生成章节内容")
+        st.markdown("### ✦ 步骤三：生成章节内容")
         
         col5, col6 = st.columns([2, 3])
         with col5:
@@ -306,16 +306,16 @@ if novels:
         
         with col6:
             additional_guidance = st.text_area(
-                "💡 额外创作指导（可选）",
+                "○ 额外创作指导（可选）",
                 placeholder="例如：这一章要突出主角的内心挣扎...",
                 height=100,
                 help="给 AI 一些特殊的创作建议"
             )
         
-        st.markdown("#### 💡 提示")
+        st.markdown("#### ○ 提示")
         st.caption("每次生成一章内容，生成时间较长（约30-60秒），请耐心等待")
         
-        if st.button("🚀 生成章节", use_container_width=True, type="primary"):
+        if st.button("▶ 生成章节", use_container_width=True, type="primary"):
             with st.spinner(f"正在生成第 {chapter_num} 章，AI 正在创作中（约30-60秒）..."):
                 result = api_client.generate_chapter(
                     novel_id,
@@ -324,12 +324,12 @@ if novels:
                 )
                 
                 if result.get("success"):
-                    st.success(f"✅ 第 {chapter_num} 章生成成功！")
+                    st.success(f"✓ 第 {chapter_num} 章生成成功！")
                     
                     chapter_data = result.get("data", {})
                     
                     if chapter_data:
-                        st.markdown("#### 📖 章节内容")
+                        st.markdown("#### ⬡ 章节内容")
                         
                         chapter_title = chapter_data.get("title", f"第 {chapter_num} 章")
                         chapter_content = chapter_data.get("content", "")
@@ -352,23 +352,23 @@ if novels:
                         </div>
                         """, unsafe_allow_html=True)
                         
-                        st.info(f"📊 本章字数: {word_count} 字")
+                        st.info(f"☰ 本章字数: {word_count} 字")
                         
                         # 完整内容
-                        with st.expander("📖 查看完整章节"):
+                        with st.expander("⬡ 查看完整章节"):
                             st.text_area("", chapter_content, height=400)
                     
                 elif result.get("error"):
-                    st.error(f"❌ 生成失败: {result['error']}")
+                    st.error(f"✕ 生成失败: {result['error']}")
 
 else:
-    st.warning("📚 暂无小说，请先创建一本小说")
+    st.warning("❖ 暂无小说，请先创建一本小说")
     st.info("👆 请在页面上方创建第一本小说")
 
 # 调试信息
 if novels_result and not novels_result.get("error"):
-    with st.expander("🔍 调试信息"):
+    with st.expander("◉ 调试信息"):
         st.json(novels_result)
 
 st.markdown("---")
-st.caption("💡 提示：建议按顺序完成蓝图 → 大纲 → 章节的创作流程")
+st.caption("○ 提示：建议按顺序完成蓝图 → 大纲 → 章节的创作流程")
