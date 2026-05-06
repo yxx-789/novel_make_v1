@@ -3,6 +3,7 @@
 全局样式 - 浅色玻璃拟态主题（方案A）
 参考：瞬息重启、Linear、Notion
 温柔舒适，现代极简，适合文学创作
+支持多页面背景色切换
 """
 
 GLOBAL_STYLES = """
@@ -422,7 +423,118 @@ GLOBAL_STYLES = """
 """
 
 
+# 页面主题配置 - 不同页面使用不同背景色
+PAGE_THEMES = {
+    "首页": {
+        "bg": "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)",  # 淡蓝灰
+        "accent": "#38bdf8",
+        "name": "首页"
+    },
+    "小说创作": {
+        "bg": "linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%)",  # 淡紫灰
+        "accent": "#a78bfa",
+        "name": "创作"
+    },
+    "小说管理": {
+        "bg": "linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)",  # 淡绿灰
+        "accent": "#34d399",
+        "name": "管理"
+    },
+    "剧本转换": {
+        "bg": "linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)",  # 淡橙灰
+        "accent": "#fbbf24",
+        "name": "转换"
+    },
+    "AI聊天": {
+        "bg": "linear-gradient(135deg, #ecfeff 0%, #cffafe 100%)",  # 淡青灰
+        "accent": "#22d3ee",
+        "name": "聊天"
+    },
+    "系统设置": {
+        "bg": "linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%)",  # 淡灰
+        "accent": "#6b7280",
+        "name": "设置"
+    }
+}
+
+
+def get_page_theme_css(page_name: str) -> str:
+    """
+    获取页面特定的CSS样式
+    
+    Args:
+        page_name: 页面名称（如"首页"、"小说创作"等）
+    
+    Returns:
+        页面特定的CSS样式字符串
+    """
+    theme = PAGE_THEMES.get(page_name, PAGE_THEMES["首页"])
+    
+    return f"""
+    <style>
+        /* 页面背景色动态切换 */
+        html, body, .stApp {{
+            background: {theme['bg']} !important;
+            transition: background 0.8s ease-in-out !important;
+        }}
+        
+        /* 更新主题色 */
+        :root {{
+            --accent-color: {theme['accent']};
+        }}
+        
+        /* 更新按钮主题色 */
+        .stButton > button {{
+            background: {theme['accent']};
+        }}
+        
+        .stButton > button:hover {{
+            background: {theme['accent']};
+            filter: brightness(0.9);
+        }}
+        
+        /* 更新进度条主题色 */
+        .stProgress > div > div > div {{
+            background: {theme['accent']};
+        }}
+        
+        /* 更新卡片主题色 */
+        .feature-card ul li::before {{
+            color: {theme['accent']};
+        }}
+        
+        /* 更新标题装饰线主题色 */
+        .main-header::after {{
+            background: linear-gradient(90deg, transparent, {theme['accent']}, transparent);
+        }}
+    </style>
+    """
+
+
 def apply_global_styles():
     """应用全局样式"""
     import streamlit as st
     st.markdown(GLOBAL_STYLES, unsafe_allow_html=True)
+
+
+def apply_page_theme(page_name: str):
+    """
+    应用页面特定主题
+    
+    Args:
+        page_name: 页面名称（如"首页"、"小说创作"等）
+    
+    使用方法:
+        from utils.global_styles import apply_global_styles, apply_page_theme
+        
+        apply_global_styles()  # 先应用全局样式
+        apply_page_theme("首页")  # 再应用页面主题
+    """
+    import streamlit as st
+    
+    # 先应用全局样式
+    apply_global_styles()
+    
+    # 再应用页面特定主题
+    theme_css = get_page_theme_css(page_name)
+    st.markdown(theme_css, unsafe_allow_html=True)
