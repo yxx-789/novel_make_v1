@@ -6,6 +6,7 @@ FastAPI 路由定义
 
 from fastapi import FastAPI, HTTPException, BackgroundTasks, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from typing import List, Optional, Dict, Any
 from pathlib import Path
@@ -162,6 +163,44 @@ async def generate_blueprint(novel_id: str):
             message="生成失败",
             error=str(e)
         )
+
+
+@app.get("/api/v1/novels/{novel_id}/blueprint/stream")
+async def generate_blueprint_stream(novel_id: str):
+    """
+    流式生成小说蓝图（SSE）
+    
+    实时显示生成进度和结果
+    """
+    if not novel_engine:
+        raise HTTPException(status_code=500, detail="Novel engine not initialized")
+    
+    async def generate():
+        """流式生成器"""
+        try:
+            # 发送开始事件
+            yield f"data: {json.dumps({'type': 'start', 'message': '开始生成蓝图...'}, ensure_ascii=False)}\n\n"
+            
+            # 生成蓝图
+            yield f"data: {json.dumps({'type': 'progress', 'message': '正在生成世界观设定...'}, ensure_ascii=False)}\n\n"
+            await asyncio.sleep(0.1)
+            
+            blueprint = await novel_engine.generate_blueprint(novel_id)
+            
+            # 发送完成事件
+            yield f"data: {json.dumps({'type': 'complete', 'message': '蓝图生成完成', 'data': blueprint.dict()}, ensure_ascii=False)}\n\n"
+        
+        except Exception as e:
+            yield f"data: {json.dumps({'type': 'error', 'message': f'生成失败: {str(e)}'}, ensure_ascii=False)}\n\n"
+    
+    return StreamingResponse(
+        generate(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+        }
+    )
 
 
 @app.post("/api/v1/novels/{novel_id}/outline", response_model=APIResponse)

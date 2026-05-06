@@ -82,7 +82,7 @@ class PlotBlueprint(BaseModel):
     climax: str = Field(..., description="高潮")
     falling_actions: List[str] = Field(default_factory=list, description="下降行动")
     resolution: str = Field(..., description="结局")
-    foreshadowing: List[Dict[str, str]] = Field(default_factory=list, description="伏笔设置")
+    foreshadowing: List[Dict[str, Any]] = Field(default_factory=list, description="伏笔设置")  # 改为Any，允许int或str
 
 
 class ChapterOutline(BaseModel):
