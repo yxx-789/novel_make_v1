@@ -297,15 +297,21 @@ class APIClient:
     ) -> Dict[str, Any]:
         """AI 聊天
         
-        注意：后端暂未实现此 API
+        参数说明：
+        - message: 用户消息
+        - model: 模型名称（可选）
+        - conversation_id: 会话ID（可选，用于保持对话上下文）
         """
-        # 后端暂未实现，返回提示信息
-        return {
-            "success": True,
-            "response": "AI 聊天功能正在开发中，敬请期待！\n\n您可以在「小说创作」页面使用 AI 创作小说。",
-            "model": model or Config.DEFAULT_MODEL,
-            "conversation_id": conversation_id
+        data = {
+            "message": message
         }
+        
+        if model:
+            data["model"] = model
+        if conversation_id:
+            data["conversation_id"] = conversation_id
+        
+        return self._request("POST", "/api/v1/chat", json=data)
 
 
 # 创建全局 API 客户端实例

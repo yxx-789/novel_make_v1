@@ -513,3 +513,112 @@ if __name__ == "__main__":
         port=8000,
         log_level="info"
     )
+
+
+# ==================== AI 聊天 API ====================
+
+# 简单的会话存储（生产环境应使用数据库）
+chat_sessions: Dict[str, List[Dict[str, str]]] = {}
+
+
+class ChatRequest(BaseModel):
+    """聊天请求"""
+    message: str
+    model: Optional[str] = None
+    conversation_id: Optional[str] = None
+
+
+class ChatResponse(BaseModel):
+    """聊天响应"""
+    success: bool
+    response: str
+    model: str
+    conversation_id: str
+
+
+@app.post("/api/v1/chat", response_model=ChatResponse)
+async def chat(request: ChatRequest):
+    """
+    AI 聊天
+    
+    - **message**: 用户消息
+    - **model**: 模型名称（可选）
+    - **conversation_id**: 会话ID（可选，用于保持对话上下文）
+    """
+    if not novel_engine or not novel_engine.llm:
+        raise HTTPException(status_code=500, detail="LLM not initialized")
+    
+    try:
+        # 获取或创建会话
+        conversation_id = request.conversation_id or datetime.now().strftime("%Y%m%d%H%M%S")
+        
+        # 获取对话历史
+        history = chat_sessions.get(conversation_id, [])
+        
+        # 构建消息列表
+        messages = []
+        
+        # 添加系统提示
+        system_prompt = """你是一个专业的小说创作助手，擅长：
+- 提供小说创作建议和灵感
+- 帮助塑造角色和构建世界观
+- 解答写作技巧和风格问题
+- 分析故事情节和结构
+
+请用专业、友好、鼓励的语气回答用户的问题。"""
+        
+        messages.append({"role": "system", "content": system_prompt})
+        
+        # 添加历史对话
+        for msg in history:
+            messages.append(msg)
+        
+        # 添加当前用户消息
+        messages.append({"role": "user", "content": request.message})
+        
+        # 调用 LLM
+        response = novel_engine.llm.client.chat.completions.create(
+            model=request.model or novel_engine.llm.model,
+            messages=messages,
+            temperature=0.7,
+            max_tokens=2000
+        )
+        
+        ai_response = response.choices[0].message.content
+        
+        # 保存对话历史
+        history.append({"role": "user", "content": request.message})
+        history.append({"role": "assistant", "content": ai_response})
+        
+        # 限制历史长度（保留最近10轮对话）
+        if len(history) > 20:
+            history = history[-20:]
+        
+        chat_sessions[conversation_id] = history
+        
+        return ChatResponse(
+            success=True,
+            response=ai_response,
+            model=request.model or novel_engine.llm.model,
+            conversation_id=conversation_id
+        )
+    
+    except Exception as e:
+        return ChatResponse(
+            success=False,
+            response=f"聊天失败: {str(e)}",
+            model=request.model or "unknown",
+            conversation_id=request.conversation_id or "error"
+        )
+
+
+@app.get("/api/v1/models")
+async def get_models():
+    """获取可用模型列表"""
+    return {
+        "models": [
+            {"id": "glm-5.1", "name": "GLM-5.1", "provider": "Baidu"},
+            {"id": "qwen3.5-397b-a17b", "name": "Qwen 3.5", "provider": "Alibaba"},
+            {"id": "deepseek-v3.2", "name": "DeepSeek V3.2", "provider": "DeepSeek"}
+        ]
+    }
