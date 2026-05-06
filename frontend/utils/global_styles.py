@@ -270,7 +270,18 @@ GLOBAL_STYLES = """
     /* ==================== 隐藏 Streamlit 默认元素 ==================== */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
-    header {visibility: hidden;}
+    /* header {visibility: hidden;} - 不隐藏header，保留侧边栏展开按钮 */
+    
+    /* 只隐藏header中的特定元素，不影响侧边栏 */
+    header[data-testid="stHeader"] {
+        background: transparent !important;
+    }
+    
+    /* 确保侧边栏展开按钮可见 */
+    button[kind="header"] {
+        visibility: visible !important;
+        display: flex !important;
+    }
 
     /* ==================== 页面容器样式 ==================== */
     .main .block-container {
