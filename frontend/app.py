@@ -337,12 +337,12 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
     
-    st.page_link("pages/1_🏠_首页.py", label="首页", icon="")
-    st.page_link("pages/2_✍️_小说创作.py", label="小说创作", icon="")
-    st.page_link("pages/3_📚_小说管理.py", label="小说管理", icon="")
-    st.page_link("pages/4_🎬_剧本转换.py", label="剧本转换", icon="")
-    st.page_link("pages/5_💬_AI聊天.py", label="AI对话", icon="")
-    st.page_link("pages/6_⚙️_系统设置.py", label="系统设置", icon="")
+    st.page_link("pages/1_🏠_首页.py", label="首页")
+    st.page_link("pages/2_✍️_小说创作.py", label="小说创作")
+    st.page_link("pages/3_📚_小说管理.py", label="小说管理")
+    st.page_link("pages/4_🎬_剧本转换.py", label="剧本转换")
+    st.page_link("pages/5_💬_AI聊天.py", label="AI对话")
+    st.page_link("pages/6_⚙️_系统设置.py", label="系统设置")
     
     st.markdown("<div style='height: 1px; background: rgba(0,0,0,0.06); margin: 1.5rem 0;'></div>", unsafe_allow_html=True)
     
