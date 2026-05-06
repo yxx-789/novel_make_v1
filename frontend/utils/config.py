@@ -16,6 +16,7 @@ class Config:
     # 页面配置
     PAGE_TITLE = "AI 小说创作平台"
     PAGE_ICON = "📖"
+    LAYOUT = "wide"  # 页面布局："centered" 或 "wide"
     
     # 主题配置
     PRIMARY_COLOR = "#667eea"
