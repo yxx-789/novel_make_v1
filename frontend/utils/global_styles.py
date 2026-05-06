@@ -10,15 +10,38 @@ GLOBAL_STYLES = """
     /* ==================== 字体引入 ==================== */
     @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600;700&family=Noto+Sans+SC:wght@300;400;500;600&display=swap');
 
-    /* ==================== 全局样式 ==================== */
+    /* ==================== 防止页面闪烁 - 立即应用背景色 ==================== */
+    html, body, [class*="css"] {
+        background-color: #1e1e1e !important;
+    }
+    
+    /* 强制立即渲染背景 */
+    .stApp {
+        background: #1e1e1e !important;
+    }
+
+    /* ==================== 全局样式 - 增大字体提高清晰度 ==================== */
     * {
         font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+        font-size: 16px;  /* 基础字体大小 */
     }
 
     /* 主背景 - 温暖的深灰 */
     .stApp {
         background: #1e1e1e;
     }
+
+    /* ==================== 文本清晰度优化 ==================== */
+    p, span, div {
+        color: #b8b8b8;  /* 提高对比度 */
+        line-height: 1.6;  /* 增加行高 */
+    }
+
+    /* 标题更大更清晰 */
+    h1 { font-size: 2.5rem !important; }
+    h2 { font-size: 1.8rem !important; }
+    h3 { font-size: 1.4rem !important; }
+    h4 { font-size: 1.2rem !important; }
 
     /* ==================== 主标题样式 ==================== */
     .main-header {
