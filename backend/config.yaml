@@ -1,0 +1,148 @@
+# Novel Creation API - 统一配置
+
+# ==================== LLM 配置 ====================
+llm:
+  # 主模型配置
+  primary:
+    provider: "openai"  # openai, deepseek, qwen, claude, ollama
+    api_key: "${OPENAI_API_KEY}"
+    base_url: "https://api.openai.com/v1"
+    model: "gpt-4o-mini"
+    temperature: 0.7
+    max_tokens: 4096
+  
+  # 备用模型
+  fallback:
+    provider: "deepseek"
+    api_key: "${DEEPSEEK_API_KEY}"
+    base_url: "https://api.deepseek.com/v1"
+    model: "deepseek-chat"
+
+# ==================== Embedding 配置 ====================
+embedding:
+  provider: "openai"
+  api_key: "${OPENAI_API_KEY}"
+  base_url: "https://api.openai.com/v1"
+  model: "text-embedding-ada-002"
+  retrieval_k: 5
+
+# ==================== 小说创作配置 ====================
+novel:
+  # 默认参数
+  default:
+    total_chapters: 10
+    target_word_count: 3000
+    genre: "玄幻"
+  
+  # 记忆系统
+  memory:
+    vectorstore_type: "chromadb"  # chromadb, faiss, pinecone
+    persist_directory: "./data/vectorstore"
+    collection_prefix: "novel_"
+  
+  # 一致性检查
+  consistency:
+    enabled: true
+    check_interval: 5  # 每5章检查一次
+    severity_threshold: "medium"  # low, medium, high
+
+# ==================== 剧本转换配置 ====================
+drama:
+  # 短剧参数
+  episode:
+    duration: 90  # 每集90秒
+    hook_duration: 3  # 开局钩子3秒
+    cliffhanger_duration: 5  # 结尾悬念5秒
+    max_scenes: 8
+    max_shots_per_scene: 5
+  
+  # 压缩比例
+  compression:
+    action: 0.3      # 打斗压缩到30%
+    dialogue: 0.8    # 对话保留80%
+    emotion: 1.5     # 情绪扩展到150%
+    flashback: 2.0   # 回忆闪回扩展200%
+  
+  # 输出配置
+  output:
+    formats: ["json", "markdown", "csv"]
+    directory: "./output"
+    filename_pattern: "episode_{num:03d}.{ext}"
+
+# ==================== Open WebUI 集成配置 ====================
+openwebui:
+  # 连接配置
+  base_url: "http://localhost:8080"
+  api_key: "${OPENWEBUI_API_KEY}"
+  
+  # Pipeline 配置
+  pipeline:
+    name: "Novel Creation Pipeline"
+    description: "AI小说创作 + 短剧剧本转换"
+    version: "1.0.0"
+  
+  # RAG 集成
+  rag:
+    enabled: true
+    collection_name: "novel_knowledge"
+    chunk_size: 500
+    chunk_overlap: 50
+  
+  # 模型映射
+  model_mapping:
+    novel_generation: "gpt-4o-mini"
+    drama_conversion: "gpt-4"
+    embedding: "text-embedding-ada-002"
+
+# ==================== 存储配置 ====================
+storage:
+  # 项目存储
+  projects:
+    type: "file"  # file, sqlite, postgresql
+    path: "./data/projects"
+  
+  # 日志存储
+  logs:
+    level: "INFO"
+    path: "./logs"
+    max_size: "10MB"
+    backup_count: 5
+  
+  # 缓存
+  cache:
+    enabled: true
+    ttl: 3600  # 1小时
+    max_size: "100MB"
+
+# ==================== API 配置 ====================
+api:
+  host: "0.0.0.0"
+  port: 8000
+  workers: 4
+  timeout: 300  # 5分钟
+  
+  # 限流
+  rate_limit:
+    enabled: true
+    requests_per_minute: 60
+    burst: 10
+  
+  # CORS
+  cors:
+    allow_origins: ["*"]
+    allow_methods: ["*"]
+    allow_headers: ["*"]
+
+# ==================== 安全配置 ====================
+security:
+  # API Key 认证
+  api_key_auth:
+    enabled: true
+    header_name: "X-API-Key"
+  
+  # JWT 认证（可选）
+  jwt:
+    enabled: false
+    secret: "${JWT_SECRET}"
+    algorithm: "HS256"
+    expire_minutes: 60

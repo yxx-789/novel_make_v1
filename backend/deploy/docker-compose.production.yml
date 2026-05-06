@@ -1,0 +1,169 @@
+version: '3.8'
+
+# Novel Creation Platform - 生产环境部署
+
+services:
+  # ==================== Novel Creation API ====================
+  novel_api:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    container_name: novel_creation_api
+    ports:
+      - "8000:8000"
+    environment:
+      # LLM 配置
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_BASE_URL=${OPENAI_BASE_URL:-https://api.openai.com/v1}
+      - LLM_MODEL=${LLM_MODEL:-gpt-4o-mini}
+      - EMBEDDING_MODEL=${EMBEDDING_MODEL:-text-embedding-ada-002}
+      
+      # 应用配置
+      - ENVIRONMENT=production
+      - LOG_LEVEL=INFO
+      - ENABLE_CACHE=${ENABLE_CACHE:-true}
+      - VECTORSTORE_TYPE=chromadb
+      
+      # ChromaDB 连接
+      - CHROMADB_HOST=chromadb
+      - CHROMADB_PORT=8000
+      
+      # 数据库连接（可选）
+      # - DATABASE_URL=postgresql://novel_user:${DB_PASSWORD}@postgres:5432/novel_creation
+      # - REDIS_URL=redis://redis:6379/0
+    volumes:
+      - novel_data:/app/data
+      - novel_logs:/app/logs
+      - novel_output:/app/output
+    restart: unless-stopped
+    depends_on:
+      - chromadb
+      # - postgres
+      # - redis
+    networks:
+      - novel_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ==================== ChromaDB 向量数据库 ====================
+  chromadb:
+    image: chromadb/chroma:latest
+    container_name: novel_chromadb
+    ports:
+      - "8001:8000"
+    volumes:
+      - chroma_data:/chroma/chroma
+    environment:
+      - ALLOW_RESET=true
+      - ANONYMIZED_TELEMETRY=false
+      - PERSIST_DIRECTORY=/chroma/chroma
+    restart: unless-stopped
+    networks:
+      - novel_network
+
+  # ==================== Open WebUI 前端 ====================
+  openwebui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: openwebui_novel
+    ports:
+      - "8080:8080"
+    volumes:
+      - openwebui_data:/app/backend/data
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - WEBUI_SECRET_KEY=${WEBUI_SECRET_KEY}
+    restart: unless-stopped
+    depends_on:
+      - ollama
+      - novel_api
+    networks:
+      - novel_network
+
+  # ==================== Ollama 本地模型服务 ====================
+  ollama:
+    image: ollama/ollama:latest
+    container_name: novel_ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    restart: unless-stopped
+    networks:
+      - novel_network
+    # 如果要使用GPU，取消注释以下配置
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+
+  # ==================== PostgreSQL 数据库（可选） ====================
+  # postgres:
+  #   image: postgres:15-alpine
+  #   container_name: novel_postgres
+  #   ports:
+  #     - "5432:5432"
+  #   environment:
+  #     - POSTGRES_DB=novel_creation
+  #     - POSTGRES_USER=novel_user
+  #     - POSTGRES_PASSWORD=${DB_PASSWORD}
+  #     - POSTGRES_INITDB_ARGS=--encoding=UTF8
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   restart: unless-stopped
+  #   networks:
+  #     - novel_network
+
+  # ==================== Redis 缓存（可选） ====================
+  # redis:
+  #   image: redis:7-alpine
+  #   container_name: novel_redis
+  #   ports:
+  #     - "6379:6379"
+  #   command: redis-server --appendonly yes
+  #   volumes:
+  #     - redis_data:/data
+  #   restart: unless-stopped
+  #   networks:
+  #     - novel_network
+
+  # ==================== Traefik 反向代理（生产环境） ====================
+  # traefik:
+  #   image: traefik:v3.0
+  #   container_name: novel_traefik
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock:ro
+  #     - ./traefik.yml:/etc/traefik/traefik.yml
+  #     - ./certs:/certs
+  #   command:
+  #     - "--api.insecure=true"
+  #     - "--providers.docker=true"
+  #     - "--providers.docker.exposedbydefault=false"
+  #     - "--entrypoints.web.address=:80"
+  #     - "--entrypoints.websecure.address=:443"
+  #   restart: unless-stopped
+  #   networks:
+  #     - novel_network
+
+networks:
+  novel_network:
+    driver: bridge
+
+volumes:
+  novel_data:
+  novel_logs:
+  novel_output:
+  chroma_data:
+  openwebui_data:
+  ollama_data:
+  # postgres_data:
+  # redis_data:

@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  # ==================== Novel Creation API ====================
+  novel_api:
+    build: .
+    container_name: novel_creation_api
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_BASE_URL=${OPENAI_BASE_URL:-https://api.openai.com/v1}
+      - LLM_MODEL=${LLM_MODEL:-gpt-4o-mini}
+      - ENVIRONMENT=production
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./output:/app/output
+    restart: unless-stopped
+    depends_on:
+      - chromadb
+    networks:
+      - novel_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ==================== ChromaDB 向量数据库 ====================
+  chromadb:
+    image: chromadb/chroma:latest
+    container_name: novel_chromadb
+    ports:
+      - "8001:8000"
+    volumes:
+      - chroma_data:/chroma/chroma
+    environment:
+      - ALLOW_RESET=true
+      - ANONYMIZED_TELEMETRY=false
+    restart: unless-stopped
+    networks:
+      - novel_network
+
+  # ==================== Open WebUI ====================
+  openwebui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: openwebui_novel
+    ports:
+      - "8080:8080"
+    volumes
