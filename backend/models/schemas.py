@@ -122,6 +122,10 @@ class NovelProject(BaseModel):
     characters: List[CharacterProfile] = Field(default_factory=list)
     plot_blueprint: Optional[PlotBlueprint] = None
     
+    # 新增：架构和蓝图文本
+    architecture: Optional[Dict[str, str]] = Field(None, description="完整架构（核心种子、角色动力学、世界观、情节架构、角色状态）")
+    blueprint_text: Optional[str] = Field(None, description="详细章节蓝图文本")
+    
     # 章节
     total_chapters: int = Field(default=0, description="总章节数")
     chapters: List[ChapterOutline] = Field(default_factory=list)
@@ -135,6 +139,9 @@ class NovelProject(BaseModel):
     created_at: datetime = Field(default_factory=datetime.now)
     updated_at: datetime = Field(default_factory=datetime.now)
     word_count: int = Field(default=0)
+    
+    class Config:
+        arbitrary_types_allowed = True
 
 
 # ==================== 剧本转换模型 ====================

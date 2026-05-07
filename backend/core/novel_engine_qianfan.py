@@ -16,11 +16,27 @@ from datetime import datetime
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from utils.qianfan_client import QianfanClient, QianfanResponse
 
-# 导入模型
-sys.path.insert(0, str(Path(__file__).parent.parent))
-from models.schemas import (
-    NovelProject, CharacterProfile, WorldSetting, PlotBlueprint,
-    ChapterOutline, ChapterContent, NovelGenre, NovelStatus
+from core.architecture_generator import ArchitectureGenerator
+from core.blueprint_generator import BlueprintGenerator
+from core.chapter_planner import ChapterPlanner
+
+# 导入 prompts
+from prompts.architecture_prompts import (
+    core_seed_prompt,
+    character_dynamics_prompt,
+    world_building_prompt,
+    plot_architecture_prompt,
+    create_character_state_prompt
+)
+from prompts.blueprint_prompts import (
+    chapter_blueprint_prompt,
+    chunked_chapter_blueprint_prompt
+)
+from prompts.planning_prompts import chapter_plan_prompt
+from prompts.chapter_prompts import (
+    first_chapter_draft_prompt,
+    next_chapter_draft_prompt,
+    summarize_recent_chapters_prompt
 )
 
 
@@ -116,6 +132,11 @@ class NovelEngine:
         
         # 项目存储
         self.projects: Dict[str, NovelProject] = {}
+        
+        # 初始化架构生成器
+        self.arch_gen = ArchitectureGenerator(self.llm.client)
+        self.blueprint_gen = BlueprintGenerator(self.llm.client)
+        self.planner = ChapterPlanner(self.llm.client)
     
     # ==================== 项目管理 ====================
     
@@ -172,12 +193,100 @@ class NovelEngine:
     
     # ==================== 设定生成 ====================
     
+    async def generate_architecture(
+        self,
+        novel_id: str,
+        user_guidance: str = ""
+    ) -> Dict[str, str]:
+        """
+        生成完整的小说架构（五阶段）
+        
+        包括：核心种子、角色动力学、世界观、情节架构、角色状态
+        
+        Args:
+            novel_id: 项目ID
+            user_guidance: 用户指导
+        
+        Returns:
+            包含所有架构内容的字典
+        """
+        project = await self.get_project(novel_id)
+        if not project:
+            raise ValueError(f"Project {novel_id} not found")
+        
+        # 调用架构生成器
+        architecture = await self.arch_gen.generate_full_architecture(
+            topic=project.topic,
+            genre=project.genre.value,
+            number_of_chapters=project.total_chapters,
+            word_number=project.target_word_count,
+            user_guidance=user_guidance,
+            project_id=novel_id
+        )
+        
+        # 保存到项目
+        if architecture:
+            project.architecture = architecture
+        
+        return architecture
+    
     async def generate_blueprint(self, novel_id: str) -> PlotBlueprint:
         """生成详细的小说蓝图"""
         project = await self.get_project(novel_id)
         if not project:
             raise ValueError(f"Project {novel_id} not found")
         
+        # 如果已有架构，使用架构生成器
+        if hasattr(project, 'architecture') and project.architecture:
+            architecture_text = project.architecture.get('full_architecture', '')
+            if architecture_text:
+                # 生成悬念节奏曲线蓝图
+                blueprint_text = await self.blueprint_gen.generate_blueprint(
+                    novel_architecture=architecture_text,
+                    number_of_chapters=project.total_chapters,
+                    user_guidance="",
+                    project_id=novel_id
+                )
+                
+                # 解析为 PlotBlueprint
+                blueprint_data = self.blueprint_gen.parse_blueprint_to_dict(blueprint_text)
+                
+                if blueprint_data:
+                    # 提取第1章的冲突信息作为主要冲突
+                    main_conflict = blueprint_data[0].get('role', '待生成')
+                    inciting_incident = blueprint_data[0].get('purpose', '待生成')
+                    rising_actions = []
+                    climax = ""
+                    falling_actions = []
+                    resolution = ""
+                    
+                    # 尝试从其他章节提取信息
+                    for ch_data in blueprint_data:
+                        if "高潮" in ch_data.get('role', ''):
+                            climax = ch_data.get('summary', '')
+                        elif "结局" in ch_data.get('role', ''):
+                            resolution = ch_data.get('summary', '')
+                        
+                        # 收集上升行动
+                        if ch_data.get('plot_twist_level') and "★" in ch_data['plot_twist_level']:
+                            rising_actions.append(ch_data.get('summary', ''))
+                    
+                    blueprint = PlotBlueprint(
+                        blueprint_id=str(uuid.uuid4())[:8],
+                        novel_id=novel_id,
+                        main_conflict=main_conflict,
+                        inciting_incident=inciting_incident,
+                        rising_actions=rising_actions,
+                        climax=climax,
+                        falling_actions=falling_actions,
+                        resolution=resolution
+                    )
+                    
+                    project.plot_blueprint = blueprint
+                    project.blueprint_text = blueprint_text
+                    return blueprint
+        
+        # 回退到原版生成逻辑
         # 改进的提示词 - 生成更详细的内容
         prompt = f"""
 你是一位资深的小说策划师。请为以下小说生成详细、完整的创作蓝图（每个部分都要有足够细节）：
