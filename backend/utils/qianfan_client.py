@@ -7,6 +7,7 @@
 import requests
 import json
 import time
+import os
 from typing import List, Dict, Optional, Any, Generator
 from dataclasses import dataclass
 import logging
@@ -44,9 +45,19 @@ class QianfanClient:
     - 自动重试
     """
     
-    # API 配置
-    API_KEY = "bce-v3/ALTAK-vnASNnJZQkPchN6JShUdi/38e23c1484e3b2ab42e15dd596dc85fd4328caf4"
-    API_URL = "https://qianfan.baidubce.com/v2/chat/completions"
+    def __init__(self, api_key: str = None, api_url: str = None):
+        """初始化客户端
+        
+        Args:
+            api_key: 千帆 API Key（如未提供则从环境变量读取）
+            api_url: API URL（如未提供则使用默认值）
+        """
+        # 从环境变量读取 API Key
+        self.API_KEY = api_key or os.getenv("QIANFAN_API_KEY", "")
+        self.API_URL = api_url or os.getenv("QIANFAN_API_URL", "https://qianfan.baidubce.com/v2/chat/completions")
+        
+        if not self.API_KEY:
+            raise ValueError("QIANFAN_API_KEY not found. Please set it in environment variables.")
     
     # 可用模型
     MODELS = {

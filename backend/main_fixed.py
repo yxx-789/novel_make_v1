@@ -28,15 +28,15 @@ def get_qianfan_config() -> Dict:
     """获取千帆配置"""
     return {
         "llm": {
-            "api_key": "bce-v3/ALTAK-vnASNnJZQkPchN6JShUdi/38e23c1484e3b2ab42e15dd596dc85fd4328caf4",  # 你的千帆API Key
-            "api_url": "https://qianfan.baidubce.com/v2/chat/completions",
+            "api_key": os.getenv("QIANFAN_API_KEY", ""),  # 从环境变量读取
+            "api_url": os.getenv("QIANFAN_API_URL", "https://qianfan.baidubce.com/v2/chat/completions"),
             "model": os.getenv("QIANFAN_MODEL", "glm-5.1"),
             "temperature": float(os.getenv("LLM_TEMPERATURE", "0.7")),
             "max_tokens": int(os.getenv("LLM_MAX_TOKENS", "4096"))
         },
         "embedding": {
-            "embedding_api_key": "bce-v3/ALTAK-vnASNnJZQkPchN6JShUdi/38e23c1484e3b2ab42e15dd596dc85fd4328caf4",
-            "embedding_model": "embedding-v1"
+            "embedding_api_key": os.getenv("QIANFAN_API_KEY", ""),  # 从环境变量读取
+            "embedding_model": os.getenv("EMBEDDING_MODEL", "embedding-v1")
         },
         "api": {
             "host": os.getenv("API_HOST", "0.0.0.0"),

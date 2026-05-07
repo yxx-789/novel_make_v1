@@ -69,7 +69,7 @@ Railway 会自动检测，但需要确认：
 
 ```bash
 # 千帆API配置
-OPENAI_API_KEY = bce-v3/ALTAK-vnASNnJZQkPchN6JShUdi/38e23c1484e3b2ab42e15dd596dc85fd4328caf4
+OPENAI_API_KEY = your_qianfan_api_key_here  # 替换为你的千帆 API Key
 OPENAI_BASE_URL = https://qianfan.baidubce.com/v2
 LLM_MODEL = ernie-4.0-8k
 
@@ -206,7 +206,7 @@ https://novel-make-v1-production.up.railway.app
 
 ```toml
 API_BASE_URL = "https://novel-make-v1-production.up.railway.app"
-OPENAI_API_KEY = "bce-v3/ALTAK-vnASNnJZQkPchN6JShUdi/38e23c1484e3b2ab42e15dd596dc85fd4328caf4"
+OPENAI_API_KEY = "your_qianfan_api_key_here"  # 替换为你的千帆 API Key
 LLM_MODEL = "ernie-4.0-8k"
 ```
 

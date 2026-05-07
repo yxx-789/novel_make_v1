@@ -5,7 +5,7 @@
 ### ✅ 已确认的信息
 
 - [x] GitHub仓库：`https://github.com/yxx-789/novel_make_v1`
-- [x] 千帆API Key：`bce-v3/ALTAK-vnASNnJZQkPchN6JShUdi/38e23c1484e3b2ab42e15dd596dc85fd4328caf4`
+- [x] 千帆API Key：请在 Railway 控制台的 Environment Variables 中配置 `QIANFAN_API_KEY`
 - [x] 千帆API URL：`https://qianfan.baidubce.com/v2`
 - [x] 项目后端目录：`backend/`
 
@@ -88,7 +88,7 @@
 
 ```bash
 # 千帆API配置
-OPENAI_API_KEY = bce-v3/ALTAK-vnASNnJZQkPchN6JShUdi/38e23c1484e3b2ab42e15dd596dc85fd4328caf4
+OPENAI_API_KEY = your_qianfan_api_key_here  # 替换为你的千帆 API Key（从环境变量读取）
 OPENAI_BASE_URL = https://qianfan.baidubce.com/v2
 LLM_MODEL = ernie-4.0-8k
 LLM_TEMPERATURE = 0.7
@@ -105,7 +105,7 @@ ENVIRONMENT = production
 **方式一：逐个添加**（推荐新手）
 1. 点击 **"New Variable"**
 2. 输入变量名：`OPENAI_API_KEY`
-3. 输入值：`bce-v3/ALTAK-vnASNnJZQkPchN6JShUdi/38e23c1484e3b2ab42e15dd596dc85fd4328caf4`
+3. 输入值：`your_qianfan_api_key_here`（替换为你的真实 API Key）
 4. 点击 **"Add"**
 5. 重复以上步骤
 

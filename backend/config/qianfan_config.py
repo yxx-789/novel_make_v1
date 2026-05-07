@@ -3,9 +3,12 @@
 百度千帆平台 API 配置
 """
 
+import os
+
 # ==================== 百度千帆平台 API ====================
-QIANFAN_API_KEY = "bce-v3/ALTAK-vnASNnJZQkPchN6JShUdi/38e23c1484e3b2ab42e15dd596dc85fd4328caf4"
-QIANFAN_API_URL = "https://qianfan.baidubce.com/v2/chat/completions"
+# 从环境变量读取 API Key（推荐方式）
+QIANFAN_API_KEY = os.getenv("QIANFAN_API_KEY", "")
+QIANFAN_API_URL = os.getenv("QIANFAN_API_URL", "https://qianfan.baidubce.com/v2/chat/completions")
 
 # 可用模型列表
 QIANFAN_MODELS = {
