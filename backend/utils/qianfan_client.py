@@ -213,6 +213,22 @@ class QianfanClient:
                 except:
                     continue
     
+    def generate(self, prompt: str, model: str = None, temperature: float = None, max_tokens: int = None) -> QianfanResponse:
+        """
+        便捷方法：将单个 prompt 转换为 messages 并调用 chat
+        
+        Args:
+            prompt: 用户提示
+            model: 模型ID
+            temperature: 温度参数
+            max_tokens: 最大 token 数
+        
+        Returns:
+            QianfanResponse 对象
+        """
+        messages = [{"role": "user", "content": prompt}]
+        return self.chat(messages, model, temperature, max_tokens)
+    
     def test_connection(self, model: str = None) -> bool:
         """测试 API 连接"""
         test_message = [{"role": "user", "content": "你好，这是一条测试消息"}]

@@ -16,6 +16,14 @@ from datetime import datetime
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from utils.qianfan_client import QianfanClient, QianfanResponse
 
+# 导入模型
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from models.schemas import (
+    NovelProject, CharacterProfile, WorldSetting, PlotBlueprint,
+    ChapterOutline, ChapterContent, NovelGenre, NovelStatus
+)
+
+# 导入架构生成器
 from core.architecture_generator import ArchitectureGenerator
 from core.blueprint_generator import BlueprintGenerator
 from core.chapter_planner import ChapterPlanner
