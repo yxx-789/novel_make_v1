@@ -1,163 +1,68 @@
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python3
 """
-快速测试脚本 - 用于本地测试
-运行: python quick_test.py
+快速功能测试 - 简化版
 """
+import os
+import sys
+import asyncio
+from pathlib import Path
 
-import requests
-import json
+# 设置环境变量
+os.environ['QIANFAN_API_KEY'] = 'bce-v3/ALTAK-vnASNnJZQkPchN6JShUdi/38e23c1484e3b2ab42e15dd596dc85fd4328caf4'
 
-BASE_URL = "http://localhost:8000"
+# 添加路径
+sys.path.insert(0, str(Path(__file__).parent))
 
-def test_api():
-    """测试所有 API 端点"""
+print("=" * 70)
+print("快速功能测试")
+print("=" * 70)
+
+# 测试 1: 导入和初始化
+print("\n[测试 1/3] 导入模块")
+try:
+    from utils.qianfan_client import QianfanClient
+    from core.novel_engine_qianfan import NovelEngine
+    from core.drama_engine import DramaEngine
+    print("✅ 模块导入成功")
+except Exception as e:
+    print(f"❌ 导入失败: {e}")
+    sys.exit(1)
+
+# 测试 2: 测试千帆客户端
+print("\n[测试 2/3] 测试千帆客户端")
+try:
+    client = QianfanClient(
+        api_key=os.environ['QIANFAN_API_KEY'],
+        model="glm-5.1"
+    )
     
-    print("=" * 60)
-    print("🔍 小说创作平台 - 本地测试")
-    print("=" * 60)
+    messages = [
+        {"role": "user", "content": "你好，请回复'测试成功'"}
+    ]
+    response = client.chat(messages, temperature=0.7, max_tokens=20)
     
-    # 测试1: 健康检查
-    print("\n1️⃣ 测试健康检查")
-    try:
-        resp = requests.get(f"{BASE_URL}/health")
-        if resp.status_code == 200:
-            data = resp.json()
-            print(f"✅ 状态: {data.get('status')}")
-            print(f"✅ 时间: {data.get('timestamp')}")
-        else:
-            print(f"❌ 失败: {resp.status_code}")
-    except Exception as e:
-        print(f"❌ 连接失败: {e}")
-        return
-    
-    # 测试2: 创建小说项目
-    print("\n2️⃣ 创建小说项目")
-    novel_data = {
-        "title": "测试小说",
-        "genre": "玄幻",
-        "topic": "一个少年修仙的故事",
-        "total_chapters": 3,
-        "target_word_count": 800
+    if response.success:
+        print(f"✅ API 调用成功")
+        print(f"   响应: {response.content}")
+        print(f"   模型: {response.model}")
+    else:
+        print(f"❌ API 调用失败: {response.content}")
+except Exception as e:
+    print(f"❌ 客户端测试失败: {e}")
+
+# 测试 3: 测试小说引擎创建
+print("\n[测试 3/3] 测试小说引擎创建")
+try:
+    config = {
+        "model": "glm-5.1",
+        "temperature": 0.7,
+        "max_tokens": 100000
     }
-    
-    try:
-        resp = requests.post(
-            f"{BASE_URL}/api/v1/novels",
-            json=novel_data,
-            headers={"Content-Type": "application/json"}
-        )
-        
-        if resp.status_code == 200:
-            novel = resp.json()
-            novel_id = novel.get("novel_id")
-            print(f"✅ 创建成功!")
-            print(f"   ID: {novel_id}")
-            print(f"   标题: {novel.get('title')}")
-            print(f"   类型: {novel.get('genre')}")
-        else:
-            print(f"❌ 创建失败: {resp.status_code}")
-            print(f"   响应: {resp.text}")
-            return
-    except Exception as e:
-        print(f"❌ 请求失败: {e}")
-        return
-    
-    # 测试3: 获取项目列表
-    print("\n3️⃣ 获取项目列表")
-    try:
-        resp = requests.get(f"{BASE_URL}/api/v1/novels")
-        if resp.status_code == 200:
-            novels = resp.json()
-            print(f"✅ 项目数量: {len(novels)}")
-            for n in novels:
-                print(f"   - {n.get('title')} ({n.get('novel_id')})")
-        else:
-            print(f"❌ 获取失败: {resp.status_code}")
-    except Exception as e:
-        print(f"❌ 请求失败: {e}")
-    
-    # 测试4: 生成小说蓝图
-    print(f"\n4️⃣ 生成小说蓝图 (项目ID: {novel_id})")
-    try:
-        resp = requests.post(f"{BASE_URL}/api/v1/novels/{novel_id}/blueprint")
-        if resp.status_code == 200:
-            blueprint = resp.json()
-            print(f"✅ 蓝图生成成功!")
-            print(f"   核心冲突: {blueprint.get('main_conflict', 'N/A')[:80]}...")
-        else:
-            print(f"⚠️ 蓝图生成可能耗时较长: {resp.status_code}")
-            print(f"   响应: {resp.text[:200]}")
-    except Exception as e:
-        print(f"⚠️ 蓝图生成跳过: {e}")
-    
-    # 测试5: 剧本转换测试
-    print("\n5️⃣ 剧本转换测试")
-    drama_data = {
-        "title": "短剧测试",
-        "content": "少年林风在山上采药时，发现一个发光的洞穴。洞穴中有一块神秘玉佩，"
-                  "当他触摸玉佩时，获得了一段古老的修炼记忆。他决定开始修炼，改变自己的命运。",
-        "characters": [
-            {"name": "林风", "role": "主角", "age": 16, "personality": ["好奇", "勇敢"]}
-        ]
-    }
-    
-    try:
-        resp = requests.post(
-            f"{BASE_URL}/api/v1/drama/convert",
-            json=drama_data,
-            headers={"Content-Type": "application/json"}
-        )
-        
-        if resp.status_code == 200:
-            drama = resp.json()
-            print(f"✅ 剧本转换成功!")
-            print(f"   标题: {drama.get('title', 'N/A')}")
-            print(f"   格式: {drama.get('format', 'N/A')}")
-            print(f"   总时长: {drama.get('total_duration', 'N/A')}秒")
-        else:
-            print(f"❌ 剧本转换失败: {resp.status_code}")
-            print(f"   响应: {resp.text[:200]}")
-    except Exception as e:
-        print(f"❌ 剧本转换失败: {e}")
-    
-    # 测试6: 查看API文档
-    print("\n6️⃣ API文档状态")
-    print(f"   文档地址: {BASE_URL}/docs")
-    print(f"   OpenAPI地址: {BASE_URL}/openapi.json")
-    
-    # 测试7: 测试导出功能
-    print(f"\n7️⃣ 测试导出功能 (项目ID: {novel_id})")
-    try:
-        resp = requests.get(f"{BASE_URL}/api/v1/novels/{novel_id}/export?format=markdown")
-        if resp.status_code == 200:
-            content = resp.text
-            print(f"✅ 导出成功!")
-            print(f"   长度: {len(content)} 字符")
-            print(f"   预览:")
-            print(f"   {content[:200]}...")
-        else:
-            print(f"❌ 导出失败: {resp.status_code}")
-    except Exception as e:
-        print(f"❌ 导出测试失败: {e}")
-    
-    # 总结
-    print("\n" + "=" * 60)
-    print("📊 测试总结")
-    print("=" * 60)
-    
-    print("🎯 下一步:")
-    print("1. 访问文档: http://localhost:8000/docs")
-    print("2. 交互测试: 在浏览器中点击 'Try it out'")
-    print("3. 测试所有功能: 使用 /docs 界面")
-    print("4. 检查日志: 查看服务控制台输出")
-    
-    print("\n🛠️ 如果遇到问题:")
-    print("1. 确保服务正在运行: python main.py")
-    print("2. 检查端口占用: netstat -an | grep 8000")
-    print("3. 检查依赖: pip install -r requirements.txt")
-    print("4. 检查网络连接: 能否访问千帆API")
-    
-    print("\n🎉 祝你测试愉快!")
+    engine = NovelEngine(config)
+    print("✅ 小说引擎创建成功")
+except Exception as e:
+    print(f"❌ 小说引擎创建失败: {e}")
 
-if __name__ == "__main__":
-    test_api()
+print("\n" + "=" * 70)
+print("基础测试完成")
+print("=" * 70)

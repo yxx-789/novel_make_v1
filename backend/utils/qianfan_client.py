@@ -45,20 +45,6 @@ class QianfanClient:
     - 自动重试
     """
     
-    def __init__(self, api_key: str = None, api_url: str = None):
-        """初始化客户端
-        
-        Args:
-            api_key: 千帆 API Key（如未提供则从环境变量读取）
-            api_url: API URL（如未提供则使用默认值）
-        """
-        # 从环境变量读取 API Key
-        self.API_KEY = api_key or os.getenv("QIANFAN_API_KEY", "")
-        self.API_URL = api_url or os.getenv("QIANFAN_API_URL", "https://qianfan.baidubce.com/v2/chat/completions")
-        
-        if not self.API_KEY:
-            raise ValueError("QIANFAN_API_KEY not found. Please set it in environment variables.")
-    
     # 可用模型
     MODELS = {
         "glm-5.1": {"name": "智谱 GLM-5.1", "context": 128000},
@@ -76,11 +62,27 @@ class QianfanClient:
         timeout: int = 600,  # 10分钟超时
         max_retries: int = 3
     ):
-        self.api_key = api_key or self.API_KEY
-        self.api_url = api_url or self.API_URL
+        """初始化客户端
+        
+        Args:
+            api_key: 千帆 API Key（如未提供则从环境变量读取）
+            api_url: API URL（如未提供则使用默认值）
+            model: 默认模型
+            timeout: 请求超时时间（秒）
+            max_retries: 最大重试次数
+        """
+        # 从环境变量读取 API Key
+        env_api_key = os.getenv("QIANFAN_API_KEY", "")
+        env_api_url = os.getenv("QIANFAN_API_URL", "https://qianfan.baidubce.com/v2/chat/completions")
+        
+        self.api_key = api_key or env_api_key
+        self.api_url = api_url or env_api_url
         self.model = model or self.DEFAULT_MODEL
         self.timeout = timeout
         self.max_retries = max_retries
+        
+        if not self.api_key:
+            raise ValueError("QIANFAN_API_KEY not found. Please set it in environment variables or pass it as argument.")
     
     def chat(
         self,
