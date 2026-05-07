@@ -17,7 +17,7 @@ from datetime import datetime
 # 导入核心引擎
 import sys
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from core.novel_engine import NovelEngine
+from core.novel_engine_qianfan import NovelEngine  # 使用千帆版本
 from core.drama_engine import DramaEngine
 from models.schemas import (
     CreateNovelRequest, GenerateChapterRequest, CreateDramaRequest,
