@@ -173,36 +173,73 @@ class NovelEngine:
     # ==================== 设定生成 ====================
     
     async def generate_blueprint(self, novel_id: str) -> PlotBlueprint:
-        """生成小说蓝图"""
+        """生成详细的小说蓝图"""
         project = await self.get_project(novel_id)
         if not project:
             raise ValueError(f"Project {novel_id} not found")
         
+        # 改进的提示词 - 生成更详细的内容
         prompt = f"""
-你是一位专业的小说策划师。请为以下小说生成详细的创作蓝图：
+你是一位资深的小说策划师。请为以下小说生成详细、完整的创作蓝图（每个部分都要有足够细节）：
 
 小说标题：{project.title}
 类型：{project.genre.value}
 主题/梗概：{project.topic}
 总章节数：{project.total_chapters}
 
-请生成：
-1. 核心冲突（一句话概括主要矛盾）
-2. 触发事件（故事开始的契机）
-3. 上升行动（3-5个关键转折点）
-4. 高潮（故事最高潮）
-5. 下降行动（高潮后的解决过程）
-6. 结局（最终结果）
+【请生成以下内容】
 
-以JSON格式输出：
+1. 核心冲突（200字以上）
+   - 详细描述主要矛盾的本质和根源
+   - 说明冲突如何影响故事发展
+   - 分析主角与反派的利益冲突
+
+2. 触发事件（300字以上）
+   - 详细描述故事开始的契机和场景
+   - 包含具体的人物、对话和行动
+   - 说明为什么这个事件彻底改变了主角的命运
+
+3. 上升行动（3-5个详细转折点）
+   - 每个转折点都需要200字以上的详细描述
+   - 包含具体的场景、情节推进和角色成长
+   - 说明每个转折如何将故事推向高潮
+
+4. 高潮（500字以上）
+   - 详细描述故事最高潮场景
+   - 包含激烈的冲突、关键抉择和情感爆发
+   - 说明主角如何面对最终挑战
+
+5. 下降行动（300字以上）
+   - 详细描述高潮后的解决过程
+   - 包含情节的收束和悬念的解答
+   - 说明主要角色的最终归宿
+
+6. 结局（200字以上）
+   - 详细描述故事的最终结果和主题升华
+   - 包含角色的命运总结和人生感悟
+   - 为读者留下思考空间
+
+【输出要求】
+请以JSON格式输出，确保每个字段都有足够的细节和字数。
+
+格式示例：
 {{
-    "main_conflict": "核心冲突描述",
-    "inciting_incident": "触发事件描述",
-    "rising_actions": ["转折1", "转折2", "转折3"],
-    "climax": "高潮描述",
-    "falling_actions": ["解决过程1", "解决过程2"],
-    "resolution": "结局描述"
+    "main_conflict": "300字左右的详细冲突描述...",
+    "inciting_incident": "500字左右的触发事件详细描述...",
+    "rising_actions": [
+        "转折点1的300字详细描述...",
+        "转折点2的300字详细描述...",
+        "转折点3的300字详细描述..."
+    ],
+    "climax": "800字以上的高潮详细描述...",
+    "falling_actions": [
+        "解决过程1的200字描述...",
+        "解决过程2的200字描述..."
+    ],
+    "resolution": "300字以上的结局详细描述..."
 }}
+
+请开始创作：
 """
         
         result = await self.llm.generate(prompt)
@@ -233,36 +270,66 @@ class NovelEngine:
         return blueprint
     
     async def generate_chapter_outline(self, novel_id: str) -> List[ChapterOutline]:
-        """生成章节大纲"""
+        """生成详细的章节大纲"""
         project = await self.get_project(novel_id)
         if not project:
             raise ValueError(f"Project {novel_id} not found")
         
+        # 如果有蓝图，在提示词中加入蓝图信息
+        blueprint_info = ""
+        if project.plot_blueprint:
+            blueprint = project.plot_blueprint
+            blueprint_info = f"""
+【蓝图信息】
+核心冲突：{blueprint.main_conflict[:200]}
+触发事件：{blueprint.inciting_incident[:200]}
+高潮：{blueprint.climax[:200]}
+结局：{blueprint.resolution[:200]}
+"""
+        
         prompt = f"""
-你是一位专业的小说大纲师。请为以下小说生成章节大纲：
+你是一位专业的网络小说大纲师。请为以下小说生成详细、引人入胜的章节大纲：
 
 小说标题：{project.title}
 类型：{project.genre.value}
 主题：{project.topic}
 总章节数：{project.total_chapters}
+{blueprint_info}
+【大纲要求】
 
-请为每一章生成：
-- 章节标题
-- 章节摘要（100字以内）
-- 关键事件（3-5个）
+请为每一章生成以下内容：
 
-以JSON格式输出：
+1. 章节标题（吸引人的标题）
+2. 章节摘要（200字以上，详细的情节概括）
+3. 关键事件（5-8个具体事件，每个事件50-100字）
+4. 涉及角色（本章出现的主要角色）
+5. 情节推进（说明本章如何推动整体故事发展）
+6. 爽点/看点（本章的吸引点，如打脸、逆袭、身份曝光等）
+
+【输出格式要求】
+请以JSON格式输出，确保每个章节都有足够的细节和吸引力。
+
+格式示例：
 {{
     "chapters": [
         {{
             "chapter_num": 1,
-            "title": "第1章标题",
-            "summary": "章节摘要",
-            "key_events": ["事件1", "事件2", "事件3"]
+            "title": "引人入胜的章节标题",
+            "summary": "200字以上的详细章节摘要，包含具体的情节描述...",
+            "key_events": [
+                "事件1的50-100字详细描述",
+                "事件2的50-100字详细描述",
+                "事件3的50-100字详细描述"
+            ],
+            "characters_involved": ["主角", "配角1", "反派1"],
+            "plot_progression": "本章如何推动故事发展，100字以上",
+            "appealing_points": ["爽点1", "爽点2"]
         }},
         ...
     ]
 }}
+
+请开始创作：
 """
         
         result = await self.llm.generate(prompt)
