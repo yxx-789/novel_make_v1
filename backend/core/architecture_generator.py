@@ -104,16 +104,18 @@ class ArchitectureGenerator:
             word_number=word_number
         )
         
-        result = await self.llm.generate(prompt)
+        # 使用同步方法调用
+        result = self.llm.generate(prompt)
         
-        if not result.strip():
+        if not result.success or not result.content.strip():
             logger.warning("core_seed_prompt generation failed and returned empty.")
             return ""
         
-        self.partial_data["core_seed_result"] = result.strip()
-        logger.info(f"✅ 核心种子生成完成: {len(result)} 字")
+        content = result.content.strip()
+        self.partial_data["core_seed_result"] = content
+        logger.info(f"✅ 核心种子生成完成: {len(content)} 字")
         
-        return result.strip()
+        return content
     
     async def generate_character_dynamics(
         self,
