@@ -84,8 +84,14 @@ def create_app() -> FastAPI:
     """创建并配置应用"""
     config = get_config()
     
-    # 初始化引擎
-    init_engines(config["llm"], config["embedding"])
+    try:
+        # 初始化引擎
+        init_engines(config["llm"], config["embedding"])
+        print(f"✅ 引擎初始化成功 - 平台: {config['llm']['platform']}")
+    except Exception as e:
+        print(f"⚠️  引擎初始化失败: {e}")
+        print("⚠️  应用将继续运行，但AI功能可能不可用")
+        # 应用继续运行，但引擎为None
     
     return app
 
