@@ -26,18 +26,49 @@ load_dotenv()
 
 
 def get_config() -> Dict:
-    """获取配置 - 使用百度千帆 API"""
+    """获取配置 - 支持百度千帆和 OpenAI 两种配置"""
+    # 优先使用千帆配置
+    qianfan_api_key = os.getenv("QIANFAN_API_KEY", "")
+    qianfan_api_url = os.getenv("QIANFAN_API_URL", "https://qianfan.baidubce.com/v2/chat/completions")
+    qianfan_model = os.getenv("QIANFAN_MODEL", "glm-5.1")
+    
+    # 如果没有千帆配置，使用 OpenAI 配置
+    if not qianfan_api_key:
+        openai_api_key = os.getenv("OPENAI_API_KEY", "")
+        openai_base_url = os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1")
+        openai_model = os.getenv("LLM_MODEL", "gpt-4o-mini")
+        
+        if openai_api_key:
+            # 使用 OpenAI 配置
+            api_key = openai_api_key
+            api_url = openai_base_url
+            model = openai_model
+            platform = "OpenAI"
+        else:
+            # 都没有设置，使用千帆默认值（但 API key 为空）
+            api_key = qianfan_api_key
+            api_url = qianfan_api_url
+            model = qianfan_model
+            platform = "Qianfan (no API key)"
+    else:
+        # 使用千帆配置
+        api_key = qianfan_api_key
+        api_url = qianfan_api_url
+        model = qianfan_model
+        platform = "Qianfan"
+    
     return {
         "llm": {
-            "api_key": os.getenv("QIANFAN_API_KEY", ""),  # 千帆 API Key
-            "api_url": os.getenv("QIANFAN_API_URL", "https://qianfan.baidubce.com/v2/chat/completions"),
-            "model": os.getenv("QIANFAN_MODEL", "glm-5.1"),  # 千帆模型
+            "api_key": api_key,
+            "api_url": api_url,
+            "model": model,
             "temperature": float(os.getenv("LLM_TEMPERATURE", "0.7")),
-            "max_tokens": int(os.getenv("LLM_MAX_TOKENS", "4096"))
+            "max_tokens": int(os.getenv("LLM_MAX_TOKENS", "4096")),
+            "platform": platform
         },
         "embedding": {
-            "embedding_api_key": os.getenv("QIANFAN_API_KEY", ""),  # 千帆 API Key
-            "embedding_url": os.getenv("QIANFAN_API_URL", "https://qianfan.baidubce.com/v2/chat/completions"),
+            "embedding_api_key": api_key,
+            "embedding_url": api_url,
             "embedding_model": os.getenv("EMBEDDING_MODEL", "embedding-v1")
         },
         "api": {
@@ -68,14 +99,14 @@ def main():
 ╔═══════════════════════════════════════════╗
 ║    Novel Creation API v1.0.0              ║
 ║    AI 小说创作 + 短剧剧本转换               ║
-║    百度千帆 API 版本                        ║
+║    {config['llm']['platform']} 版本               ║
 ╚═══════════════════════════════════════════╝
 
 🚀 服务启动中...
 📍 地址: http://{api_config['host']}:{api_config['port']}
 📚 API文档: http://{api_config['host']}:{api_config['port']}/docs
 🔧 环境: {os.getenv('ENVIRONMENT', 'development')}
-🤖 模型: {config['llm']['model']} (百度千帆)
+🤖 模型: {config['llm']['model']} ({config['llm']['platform']})
     """)
     
     # 启动服务
