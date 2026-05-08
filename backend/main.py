@@ -42,7 +42,7 @@ def get_config() -> Dict:
         },
         "api": {
             "host": os.getenv("API_HOST", "0.0.0.0"),
-            "port": int(os.getenv("API_PORT", "8000")),
+            "port": int(os.getenv("PORT", os.getenv("API_PORT", "8000"))),
             "workers": int(os.getenv("API_WORKERS", "1")),
             "reload": os.getenv("ENVIRONMENT", "development") == "development"
         }
