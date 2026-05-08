@@ -28,7 +28,7 @@ python-dotenv>=1.0.0
 pyyaml>=6.0
 
 # ==================== Logging ====================
-loguru>=0.7.0
+
 
 # ==================== Optional: Database ====================
 # sqlalchemy>=2.0.0
