@@ -82,7 +82,9 @@ class QianfanClient:
         self.max_retries = max_retries
         
         if not self.api_key:
-            raise ValueError("QIANFAN_API_KEY not found. Please set it in environment variables or pass it as argument.")
+            logger.warning("QIANFAN_API_KEY not found. Some features may not work.")
+            # 不抛出异常，允许应用启动
+            # raise ValueError("QIANFAN_API_KEY not found. Please set it in environment variables or pass it as argument.")
     
     def chat(
         self,
