@@ -12,9 +12,9 @@ httpx>=0.25.0
 tenacity>=8.2.0
 
 # ==================== Vector Store ====================
-chromadb>=0.4.0
-langchain>=0.1.0
-sentence-transformers>=2.2.0
+# chromadb>=0.4.0
+# langchain>=0.1.0
+# sentence-transformers>=2.2.0
 
 # ==================== File Processing ====================
 aiofiles>=23.0.0
