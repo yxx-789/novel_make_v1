@@ -63,17 +63,20 @@ class LLMAdapter:
             model=self.model
         )
     
-    async def generate(self, prompt: str, system_prompt: str = None) -> str:
+    async def generate(self, prompt: str, system_prompt: str = None, temperature: float = None) -> str:
         """生成文本"""
         messages = []
         if system_prompt:
             messages.append({"role": "system", "content": system_prompt})
         messages.append({"role": "user", "content": prompt})
         
+        # 使用传入的温度或默认温度
+        temp = temperature if temperature is not None else self.temperature
+        
         response: QianfanResponse = self.client.chat(
             messages=messages,
             model=self.model,
-            temperature=self.temperature,
+            temperature=temp,
             max_tokens=self.max_tokens
         )
         
@@ -339,9 +342,26 @@ class NovelEngine:
 【输出要求】
 请以JSON格式输出，确保每个字段都有足够的细节和字数。
 
-**重要提示：数组中的元素不要添加索引号！**
+⚠️ **非常重要：数组中的元素绝对不能添加索引号（如 0:, 1:）！**
 
-格式示例：
+正确示例：
+{{
+    "rising_actions": [
+        "转折点1的300字详细描述...",
+        "转折点2的300字详细描述...",
+        "转折点3的300字详细描述..."
+    ]
+}}
+
+错误示例（禁止）：
+{{
+    "rising_actions": [
+        0: "转折点1",  ← 错误！不要添加 0:
+        1: "转折点2"   ← 错误！不要添加 1:
+    ]
+}}
+
+请严格按照正确格式输出：
 {{
     "main_conflict": "300字左右的详细冲突描述...",
     "inciting_incident": "500字左右的触发事件详细描述...",
@@ -361,7 +381,7 @@ class NovelEngine:
 请开始创作：
 """
         
-        result = await self.llm.generate(prompt)
+        result = await self.llm.generate(prompt, temperature=0.3)
         
         # 使用新的 JSON 解析工具
         from utils.json_utils import parse_ai_json
@@ -446,7 +466,7 @@ class NovelEngine:
 请开始创作：
 """
         
-        result = await self.llm.generate(prompt)
+        result = await self.llm.generate(prompt, temperature=0.3)
         
         # 使用新的 JSON 解析工具
         from utils.json_utils import parse_ai_json
@@ -561,7 +581,7 @@ class NovelEngine:
 }}
 """
         
-        result = await self.llm.generate(prompt)
+        result = await self.llm.generate(prompt, temperature=0.3)
         
         try:
             import re
