@@ -39,9 +39,9 @@ DEFAULT_MODEL = "glm-5.1"
 EMBEDDING_MODEL = "embedding-v1"
 
 # ==================== 调用配置 ====================
-REQUEST_TIMEOUT = 60  # 秒
-MAX_RETRIES = 3
-RETRY_DELAY = 1  # 秒
+REQUEST_TIMEOUT = 600  # 秒
+MAX_RETRIES = 5
+RETRY_DELAY = 2  # 秒
 
 # ==================== 流式响应配置 ====================
 STREAM_ENABLED = True
