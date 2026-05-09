@@ -250,9 +250,10 @@ class CreateNovelRequest(BaseModel):
 
 
 class GenerateChapterRequest(BaseModel):
-    """生成章节请求"""
-    novel_id: str
-    chapter_num: int
+    """生成章节请求
+    
+    注意：novel_id 和 chapter_num 已通过 URL 路径传递，无需在请求体中重复
+    """
     additional_guidance: Optional[str] = None
     use_memory: bool = Field(default=True)
 

@@ -191,10 +191,12 @@ class APIClient:
         if use_memory is not None:
             data["use_memory"] = use_memory
         
+        # 如果 data 为空字典，发送空的 JSON 对象，而不是 None
+        # 因为后端需要请求体（即使为空）
         return self._request(
             "POST", 
             f"/api/v1/novels/{novel_id}/chapters/{chapter_num}/generate",
-            json=data if data else None
+            json=data  # 总是发送 JSON，即使为空
         )
     
     def finalize_chapter(self, novel_id: str, chapter_num: int) -> Dict[str, Any]:
