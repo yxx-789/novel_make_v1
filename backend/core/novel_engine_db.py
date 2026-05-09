@@ -166,10 +166,9 @@ class NovelEngineDB:
 
         # 保存到数据库
         with get_db_session() as db:
+            # 只保存 plot_blueprint 字段（PlotBlueprint 类没有 world_setting 和 characters 字段）
             blueprint_data = {
-                "world_setting": blueprint.dict().get("world_setting", {}) if blueprint else {},
-                "characters": blueprint.dict().get("characters", []) if blueprint else [],
-                "plot_blueprint": blueprint.dict() if blueprint else {}
+                "plot_blueprint": blueprint.model_dump() if blueprint else {}
             }
             NovelRepository.save_blueprint(db, novel_id, blueprint_data)
 
