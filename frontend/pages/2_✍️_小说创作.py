@@ -1,5 +1,5 @@
 """
-小说创作页面 - 完全适配后端 API
+小说创作页面 - 完全适配后端 API（优化版：支持查看已生成的蓝图和大纲）
 """
 import streamlit as st
 from utils.api import api_client
@@ -202,8 +202,124 @@ if novels:
         
         st.markdown("---")
         
+        # ==================== 新增：查看已生成的内容 ====================
+        st.markdown("### 📊 创作进度总览")
+        
+        # 获取小说完整信息
+        with st.spinner("加载创作进度..."):
+            novel_detail = api_client.get_novel(novel_id)
+        
+        # 解析蓝图和大纲数据
+        blueprint_data = None
+        outline_data = None
+        chapters_data = []
+        
+        if novel_detail.get("success"):
+            data = novel_detail.get("data", {})
+            blueprint_data = data.get("blueprint") or data.get("plot_blueprint")
+            outline_data = data.get("chapter_outlines") or data.get("outlines")
+            chapters_data = data.get("chapters") or []
+        
+        # 显示进度
+        col_p1, col_p2, col_p3 = st.columns(3)
+        
+        with col_p1:
+            blueprint_status = "✅ 已生成" if blueprint_data else "⏳ 未生成"
+            st.metric("📋 蓝图", blueprint_status)
+        
+        with col_p2:
+            outline_count = len(outline_data) if outline_data else 0
+            outline_status = f"✅ {outline_count} 章" if outline_count > 0 else "⏳ 未生成"
+            st.metric("📝 大纲", outline_status)
+        
+        with col_p3:
+            chapter_count = len(chapters_data)
+            chapter_status = f"✅ {chapter_count} 章" if chapter_count > 0 else "⏳ 未生成"
+            st.metric("📖 章节", chapter_status)
+        
+        st.markdown("---")
+        
+        # ==================== 已生成的蓝图内容（新增）====================
+        if blueprint_data:
+            st.markdown("### 📋 已生成的蓝图")
+            
+            with st.expander("👁️ 查看蓝图内容", expanded=False):
+                # 显示蓝图结构
+                st.markdown("#### ◉ 世界观设定")
+                world = blueprint_data.get("world_setting", {}) or blueprint_data.get("worldSetting", {})
+                if world:
+                    col_w1, col_w2 = st.columns(2)
+                    with col_w1:
+                        st.markdown(f"- **时代**: {world.get('era', '未设置')}")
+                        st.markdown(f"- **地点**: {world.get('location', '未设置')}")
+                    with col_w2:
+                        st.markdown(f"- **力量体系**: {world.get('power_system', '未设置')}")
+                        st.markdown(f"- **社会结构**: {world.get('social_structure', '未设置')}")
+                
+                st.markdown("#### 👥 角色档案")
+                characters = blueprint_data.get("characters", [])
+                if characters:
+                    for i, char in enumerate(characters[:10], 1):  # 显示前10个
+                        with st.container():
+                            st.markdown(f"**{i}. {char.get('name', '未知')}** ({char.get('role', '未知角色')})")
+                            if char.get('personality'):
+                                st.caption(f"性格: {char.get('personality')}")
+                            if char.get('background'):
+                                st.caption(f"背景: {char.get('background')}")
+                
+                st.markdown("#### ⬡ 情节蓝图")
+                plot = blueprint_data.get("plot_blueprint", {}) or blueprint_data.get("plotBlueprint", {})
+                if plot:
+                    col_p1, col_p2 = st.columns(2)
+                    with col_p1:
+                        st.markdown(f"- **核心冲突**: {plot.get('main_conflict', '未设置')}")
+                        st.markdown(f"- **高潮**: {plot.get('climax', '未设置')}")
+                    with col_p2:
+                        st.markdown(f"- **结局**: {plot.get('resolution', '未设置')}")
+                        st.markdown(f"- **主题**: {plot.get('theme', '未设置')}")
+                
+                # 完整数据
+                with st.expander("◉ 查看完整蓝图数据（JSON）"):
+                    st.json(blueprint_data)
+            
+            st.markdown("---")
+        
+        # ==================== 已生成的大纲内容（新增）====================
+        if outline_data and len(outline_data) > 0:
+            st.markdown("### 📝 已生成的章节大纲")
+            
+            with st.expander("👁️ 查看大纲内容", expanded=False):
+                # 显示前10章大纲
+                for outline in outline_data[:10]:
+                    chapter_num = outline.get("chapter_num") or outline.get("chapterNum", "?")
+                    title = outline.get("title", "未命名")
+                    summary = outline.get("summary", "暂无概要")
+                    
+                    with st.container():
+                        st.markdown(f"""
+                        <div style="
+                            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                            padding: 1rem;
+                            border-radius: 10px;
+                            margin: 0.5rem 0;
+                            color: white;
+                        ">
+                            <h4 style="margin: 0; color: white;">⬡ 第 {chapter_num} 章: {title}</h4>
+                            <p style="margin: 0.5rem 0 0 0; opacity: 0.9;">{summary}</p>
+                        </div>
+                        """, unsafe_allow_html=True)
+                
+                if len(outline_data) > 10:
+                    st.info(f"还有 {len(outline_data) - 10} 章未显示...")
+            
+            st.markdown("---")
+        
         # ==================== 步骤一：生成蓝图 ====================
         st.markdown("### ✦ 步骤一：生成故事蓝图")
+        
+        if blueprint_data:
+            st.info("✅ 蓝图已生成，可以重新生成覆盖现有蓝图")
+        
         st.info("""
         ▤ **蓝图包含**：
         - ◉ 世界观设定（时代背景、地点、力量体系等）
@@ -211,40 +327,13 @@ if novels:
         - ⬡ 情节蓝图（核心冲突、高潮、结局等）
         """)
         
-        if st.button("◇ 生成蓝图", use_container_width=True, type="primary"):
+        if st.button("◇ 生成蓝图" if not blueprint_data else "🔄 重新生成蓝图", use_container_width=True, type="primary"):
             with st.spinner("正在生成蓝图，AI 正在创作中，请稍候..."):
                 result = api_client.generate_blueprint(novel_id)
                 
                 if result.get("success"):
                     st.success("✓ 蓝图生成成功！")
-                    
-                    blueprint_data = result.get("data", {})
-                    
-                    if blueprint_data:
-                        with st.expander("▤ 查看蓝图内容", expanded=True):
-                            # 显示蓝图结构
-                            st.markdown("#### ◉ 世界观设定")
-                            world = blueprint_data.get("world_setting", {})
-                            if world:
-                                st.markdown(f"- **时代**: {world.get('era', '未设置')}")
-                                st.markdown(f"- **地点**: {world.get('location', '未设置')}")
-                                st.markdown(f"- **力量体系**: {world.get('power_system', '未设置')}")
-                            
-                            st.markdown("#### 👥 角色档案")
-                            characters = blueprint_data.get("characters", [])
-                            for i, char in enumerate(characters[:5], 1):  # 只显示前5个
-                                st.markdown(f"**{i}. {char.get('name', '未知')}** ({char.get('role', '未知角色')})")
-                            
-                            st.markdown("#### ⬡ 情节蓝图")
-                            plot = blueprint_data.get("plot_blueprint", {})
-                            if plot:
-                                st.markdown(f"- **核心冲突**: {plot.get('main_conflict', '未设置')}")
-                                st.markdown(f"- **高潮**: {plot.get('climax', '未设置')}")
-                                st.markdown(f"- **结局**: {plot.get('resolution', '未设置')}")
-                            
-                            # 完整数据
-                            with st.expander("◉ 查看完整数据"):
-                                st.json(blueprint_data)
+                    st.rerun()  # 刷新页面显示新蓝图
                     
                 elif result.get("error"):
                     st.error(f"✕ 生成失败: {result['error']}")
@@ -256,36 +345,16 @@ if novels:
         # ==================== 步骤二：生成章节大纲 ====================
         st.markdown("### ▤ 步骤二：生成章节大纲")
         
-        if st.button("☰ 生成大纲", use_container_width=True, type="primary"):
+        if outline_data and len(outline_data) > 0:
+            st.info(f"✅ 已生成 {len(outline_data)} 章大纲，可以重新生成覆盖现有大纲")
+        
+        if st.button("☰ 生成大纲" if not (outline_data and len(outline_data) > 0) else "🔄 重新生成大纲", use_container_width=True, type="primary"):
             with st.spinner("正在生成章节大纲，AI 正在创作中..."):
                 result = api_client.generate_outline(novel_id)
                 
                 if result.get("success"):
                     st.success("✓ 大纲生成成功！")
-                    
-                    outline_data = result.get("data", [])
-                    
-                    if outline_data:
-                        st.markdown("#### ❖ 章节大纲")
-                        
-                        for outline in outline_data[:10]:  # 只显示前10章
-                            chapter_num = outline.get("chapter_num", "?")
-                            title = outline.get("title", "未命名")
-                            summary = outline.get("summary", "暂无概要")
-                            
-                            with st.container():
-                                st.markdown(f"""
-                                <div style="
-                                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                                    padding: 1rem;
-                                    border-radius: 10px;
-                                    margin: 0.5rem 0;
-                                    color: white;
-                                ">
-                                    <h4 style="margin: 0; color: white;">⬡ 第 {chapter_num} 章: {title}</h4>
-                                    <p style="margin: 0.5rem 0 0 0; opacity: 0.9;">{summary}</p>
-                                </div>
-                                """, unsafe_allow_html=True)
+                    st.rerun()  # 刷新页面显示新大纲
                     
                 elif result.get("error"):
                     st.error(f"✕ 生成失败: {result['error']}")
