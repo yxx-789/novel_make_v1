@@ -339,6 +339,8 @@ class NovelEngine:
 【输出要求】
 请以JSON格式输出，确保每个字段都有足够的细节和字数。
 
+**重要提示：数组中的元素不要添加索引号！**
+
 格式示例：
 {{
     "main_conflict": "300字左右的详细冲突描述...",
@@ -361,16 +363,9 @@ class NovelEngine:
         
         result = await self.llm.generate(prompt)
         
-        try:
-            # 尝试解析JSON
-            import re
-            json_match = re.search(r'\{[\s\S]*\}', result)
-            if json_match:
-                data = json.loads(json_match.group())
-            else:
-                data = {}
-        except:
-            data = {}
+        # 使用新的 JSON 解析工具
+        from utils.json_utils import parse_ai_json
+        data = parse_ai_json(result)
         
         blueprint = PlotBlueprint(
             blueprint_id=str(uuid.uuid4())[:8],
@@ -426,6 +421,8 @@ class NovelEngine:
 【输出格式要求】
 请以JSON格式输出，确保每个章节都有足够的细节和吸引力。
 
+**重要提示：数组中的元素不要添加索引号！**
+
 格式示例：
 {{
     "chapters": [
@@ -451,16 +448,10 @@ class NovelEngine:
         
         result = await self.llm.generate(prompt)
         
-        try:
-            import re
-            json_match = re.search(r'\{[\s\S]*\}', result)
-            if json_match:
-                data = json.loads(json_match.group())
-                chapters_data = data.get("chapters", [])
-            else:
-                chapters_data = []
-        except:
-            chapters_data = []
+        # 使用新的 JSON 解析工具
+        from utils.json_utils import parse_ai_json
+        data = parse_ai_json(result)
+        chapters_data = data.get("chapters", [])
         
         outlines = []
         for chapter_data in chapters_data:
