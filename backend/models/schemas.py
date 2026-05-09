@@ -66,8 +66,8 @@ class CharacterProfile(BaseModel):
 
 class WorldSetting(BaseModel):
     """世界观设定"""
-    era: str = Field(..., description="时代背景")
-    location: str = Field(..., description="主要地点")
+    era: Optional[str] = Field(None, description="时代背景")
+    location: Optional[str] = Field(None, description="主要地点")
     power_system: Optional[str] = Field(None, description="力量体系")
     social_structure: Optional[str] = Field(None, description="社会结构")
     unique_elements: List[str] = Field(default_factory=list, description="独特元素")
@@ -76,20 +76,20 @@ class WorldSetting(BaseModel):
 
 class PlotBlueprint(BaseModel):
     """情节蓝图"""
-    main_conflict: str = Field(..., description="核心冲突")
-    inciting_incident: str = Field(..., description="触发事件")
+    main_conflict: Optional[str] = Field(None, description="核心冲突")
+    inciting_incident: Optional[str] = Field(None, description="触发事件")
     rising_actions: List[str] = Field(default_factory=list, description="上升行动")
-    climax: str = Field(..., description="高潮")
+    climax: Optional[str] = Field(None, description="高潮")
     falling_actions: List[str] = Field(default_factory=list, description="下降行动")
-    resolution: str = Field(..., description="结局")
+    resolution: Optional[str] = Field(None, description="结局")
     foreshadowing: List[Dict[str, Any]] = Field(default_factory=list, description="伏笔设置")  # 改为Any，允许int或str
 
 
 class ChapterOutline(BaseModel):
     """章节大纲"""
     chapter_num: int = Field(..., description="章节号")
-    title: str = Field(..., description="章节标题")
-    summary: str = Field(..., description="章节概要")
+    title: Optional[str] = Field(None, description="章节标题")
+    summary: Optional[str] = Field(None, description="章节概要")
     key_events: List[str] = Field(default_factory=list, description="关键事件")
     characters_involved: List[str] = Field(default_factory=list, description="涉及角色")
     word_count_target: int = Field(default=3000, description="目标字数")
