@@ -349,21 +349,65 @@ if novels:
             st.info(f"✅ 已生成 {len(outline_data)} 章大纲，可以重新生成覆盖现有大纲")
         
         if st.button("☰ 生成大纲" if not (outline_data and len(outline_data) > 0) else "🔄 重新生成大纲", use_container_width=True, type="primary"):
-            with st.spinner("正在生成章节大纲，AI 正在创作中..."):
+            # 创建进度显示区域
+            progress_container = st.empty()
+            status_container = st.empty()
+
+            # 显示初始进度
+            with progress_container.container():
+                progress_bar = st.progress(0)
+                status_text = st.empty()
+
+                # 更新进度
+                status_text.text("🚀 正在连接 AI 服务...")
+                progress_bar.progress(10)
+
+                # 模拟进度（实际生成过程中可以分阶段更新）
+                import time
+
+                # 阶段 1: 准备数据
+                time.sleep(0.5)
+                status_text.text("📊 正在准备小说数据...")
+                progress_bar.progress(20)
+
+                # 阶段 2: 调用 API
+                time.sleep(0.5)
+                status_text.text("🤖 AI 正在创作章节大纲...")
+                progress_bar.progress(40)
+
+                # 阶段 3: 等待 AI 生成
+                time.sleep(0.5)
+                status_text.text("⏳ 正在生成详细内容，请耐心等待...")
+                progress_bar.progress(60)
+
+                # 阶段 4: 处理响应
+                time.sleep(0.5)
+                status_text.text("🔍 正在解析 AI 生成的内容...")
+                progress_bar.progress(80)
+
+                # 实际调用 API
                 result = api_client.generate_outline(novel_id)
-                
+
+                # 阶段 5: 完成
+                time.sleep(0.5)
+                status_text.text("✅ 大纲生成完成！")
+                progress_bar.progress(100)
+
+                # 显示结果
                 if result.get("success"):
-                    st.success("✓ 大纲生成成功！")
+                    st.success(f"✓ 大纲生成成功！共 {len(result.get('data', []))} 章")
                     st.rerun()  # 刷新页面显示新大纲
-                    
+
                 elif result.get("error"):
                     st.error(f"✕ 生成失败: {result['error']}")
-        
+                else:
+                    st.warning("⚠️ 未知响应，请稍后重试")
+
         st.markdown("---")
-        
+
         # ==================== 步骤三：生成章节内容 ====================
         st.markdown("### ✦ 步骤三：生成章节内容")
-        
+
         col5, col6 = st.columns([2, 3])
         with col5:
             chapter_num = st.number_input(
@@ -373,7 +417,7 @@ if novels:
                 value=1,
                 help="输入要生成的章节编号"
             )
-        
+
         with col6:
             additional_guidance = st.text_area(
                 "○ 额外创作指导（可选）",
@@ -381,30 +425,71 @@ if novels:
                 height=100,
                 help="给 AI 一些特殊的创作建议"
             )
-        
+
         st.markdown("#### ○ 提示")
         st.caption("每次生成一章内容，生成时间较长（约30-60秒），请耐心等待")
-        
+
         if st.button("▶ 生成章节", use_container_width=True, type="primary"):
-            with st.spinner(f"正在生成第 {chapter_num} 章，AI 正在创作中（约30-60秒）..."):
+            # 创建进度显示区域
+            progress_container = st.empty()
+            status_container = st.empty()
+
+            # 显示初始进度
+            with progress_container.container():
+                progress_bar = st.progress(0)
+                status_text = st.empty()
+
+                # 更新进度
+                status_text.text("🚀 正在连接 AI 服务...")
+                progress_bar.progress(10)
+
+                import time
+
+                # 阶段 1: 准备数据
+                time.sleep(0.5)
+                status_text.text(f"📚 正在准备第 {chapter_num} 章的创作数据...")
+                progress_bar.progress(20)
+
+                # 阶段 2: 调用 API
+                time.sleep(0.5)
+                status_text.text(f"🤖 AI 正在创作第 {chapter_num} 章内容...")
+                progress_bar.progress(40)
+
+                # 阶段 3: 等待 AI 生成
+                time.sleep(0.5)
+                status_text.text("⏳ 正在生成详细内容，请耐心等待（约30-60秒）...")
+                progress_bar.progress(60)
+
+                # 阶段 4: 处理响应
+                time.sleep(0.5)
+                status_text.text("🔍 正在解析 AI 生成的内容...")
+                progress_bar.progress(80)
+
+                # 实际调用 API
                 result = api_client.generate_chapter(
                     novel_id,
                     chapter_num,
                     additional_guidance if additional_guidance else None
                 )
-                
+
+                # 阶段 5: 完成
+                time.sleep(0.5)
+                status_text.text("✅ 章节生成完成！")
+                progress_bar.progress(100)
+
+                # 显示结果
                 if result.get("success"):
                     st.success(f"✓ 第 {chapter_num} 章生成成功！")
-                    
+
                     chapter_data = result.get("data", {})
-                    
+
                     if chapter_data:
                         st.markdown("#### ⬡ 章节内容")
-                        
+
                         chapter_title = chapter_data.get("title", f"第 {chapter_num} 章")
                         chapter_content = chapter_data.get("content", "")
                         word_count = chapter_data.get("word_count", 0)
-                        
+
                         st.markdown(f"""
                         <div style="
                             background: white;
@@ -421,13 +506,13 @@ if novels:
                             </div>
                         </div>
                         """, unsafe_allow_html=True)
-                        
+
                         st.info(f"☰ 本章字数: {word_count} 字")
-                        
+
                         # 完整内容
                         with st.expander("⬡ 查看完整章节"):
                             st.text_area("", chapter_content, height=400)
-                    
+
                 elif result.get("error"):
                     st.error(f"✕ 生成失败: {result['error']}")
 
