@@ -30,7 +30,7 @@ except ImportError:
 
 # 添加项目路径
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from core.novel_engine import NovelEngine
+from core.novel_engine_db import NovelEngineDB  # 使用数据库版本
 from core.drama_engine import DramaEngine
 from models.schemas import NovelGenre, DramaFormat
 

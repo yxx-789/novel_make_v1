@@ -14,10 +14,10 @@ import json
 import asyncio
 from datetime import datetime
 
-# 导入核心引擎
+# 导入核心引擎（数据库版本）
 import sys
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from core.novel_engine_qianfan import NovelEngine  # 使用千帆版本
+from core.novel_engine_db import NovelEngineDB  # 使用数据库版本
 from core.drama_engine import DramaEngine
 from models.schemas import (
     CreateNovelRequest, GenerateChapterRequest, CreateDramaRequest,
@@ -44,7 +44,7 @@ app.add_middleware(
 )
 
 # 初始化引擎（需要配置）
-novel_engine: Optional[NovelEngine] = None
+novel_engine: Optional[NovelEngineDB] = None
 drama_engine: Optional[DramaEngine] = None
 
 
@@ -54,11 +54,11 @@ def init_engines(llm_config: Dict = None, embedding_config: Dict = None):
     
     config = llm_config or {
         "api_key": "sk-xxx",
-        "base_url": "https://api.openai.com/v1",
+        "api_url": "https://api.openai.com/v1",
         "model": "gpt-4o-mini"
     }
     
-    novel_engine = NovelEngine(config, embedding_config)
+    novel_engine = NovelEngineDB(config, embedding_config)
     drama_engine = DramaEngine(config)
 
 
