@@ -8,7 +8,14 @@ from typing import Dict, List, Optional, Any
 
 class Config:
     """配置类"""
-    API_BASE_URL = os.environ.get('API_BASE_URL', 'http://localhost:8000')
+    # 自动检测环境
+    if os.environ.get('STREAMLIT_SERVER_HEADLESS') == 'true':
+        # 生产环境 - Railway
+        API_BASE_URL = os.environ.get('API_BASE_URL', 'https://novelmakev1-production.up.railway.app')
+    else:
+        # 开发环境
+        API_BASE_URL = os.environ.get('API_BASE_URL', 'http://localhost:8000')
+    
     DEFAULT_MODEL = os.environ.get('LLM_MODEL', 'glm-5.1')
 
 

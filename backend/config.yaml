@@ -2,28 +2,28 @@
 
 # ==================== LLM 配置 ====================
 llm:
-  # 主模型配置
+  # 主模型配置 - 百度千帆
   primary:
-    provider: "openai"  # openai, deepseek, qwen, claude, ollama
-    api_key: "${OPENAI_API_KEY}"
-    base_url: "https://api.openai.com/v1"
-    model: "gpt-4o-mini"
+    provider: "qianfan"  # qianfan, openai, deepseek, qwen, claude, ollama
+    api_key: "${QIANFAN_API_KEY}"
+    base_url: "${QIANFAN_API_URL}"
+    model: "${QIANFAN_MODEL}"
     temperature: 0.7
     max_tokens: 4096
   
-  # 备用模型
+  # 备用模型 - OpenAI
   fallback:
-    provider: "deepseek"
-    api_key: "${DEEPSEEK_API_KEY}"
-    base_url: "https://api.deepseek.com/v1"
-    model: "deepseek-chat"
+    provider: "openai"
+    api_key: "${OPENAI_API_KEY}"
+    base_url: "${OPENAI_BASE_URL}"
+    model: "${LLM_MODEL}"
 
 # ==================== Embedding 配置 ====================
 embedding:
-  provider: "openai"
-  api_key: "${OPENAI_API_KEY}"
-  base_url: "https://api.openai.com/v1"
-  model: "text-embedding-ada-002"
+  provider: "qianfan"  # 使用千帆 embedding
+  api_key: "${QIANFAN_API_KEY}"
+  base_url: "${QIANFAN_API_URL}"
+  model: "${EMBEDDING_MODEL}"
   retrieval_k: 5
 
 # ==================== 小说创作配置 ====================
@@ -90,9 +90,9 @@ openwebui:
   
   # 模型映射
   model_mapping:
-    novel_generation: "gpt-4o-mini"
-    drama_conversion: "gpt-4"
-    embedding: "text-embedding-ada-002"
+    novel_generation: "glm-5.1"
+    drama_conversion: "glm-5.1"
+    embedding: "embedding-v1"
 
 # ==================== 存储配置 ====================
 storage:
